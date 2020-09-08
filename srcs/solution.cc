@@ -1,4 +1,6 @@
-void addTonetwork(sln* net, double *toadd, double range)
+#include "heads/solution.h"
+
+void Solution::addTonetwork(sln* net, double *toadd, double range)
 {// updates the matrix of distances to avoid constantly having to compute them
 
 	net->uavs.push_back(toadd);
@@ -23,7 +25,7 @@ void addTonetwork(sln* net, double *toadd, double range)
 
 
 
-void connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity, stack<tuple<int,int>>* pairs, bool dorestriction)
+void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity, stack<tuple<int,int>>* pairs, bool dorestriction)
 {// The boolean value "restrict" says wether the restriction strategy should be used (restrict is false, and G isn't root G0), or not.
 	// In restriction not applied, then fill : **restr_list, **pairs, and * npairs. Otherwise, use these lists to apply the restrictions
 
@@ -191,7 +193,7 @@ cerr<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs.size() =
 
 
 
-void duplicate_uavs(double lb, int grndi, double range)
+void Solution::duplicate_uavs(double lb, int grndi, double range)
 {/* lb for knowing if ground needs more covers, counts[] the list which gives for each ground node the number of uavs covering it,
 	covers[] the list of aforementioned covers */
 
@@ -221,7 +223,7 @@ printf("\n");
 
 
 
-void find_covers(int uavj, double range)
+void Solution::find_covers(int uavj, double range)
 {/* Find every covers for each ground node */
 
 	int i=0,j=0;
@@ -240,7 +242,7 @@ if(i==63) cout << " uav: " << uavj << " - " << net->uavs[uavj][0] << "," << net-
 
 
 
-void populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0, stack<tuple<int,int>>* pairs)
+void Solution::populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0, stack<tuple<int,int>>* pairs)
 {// note : computing diameter of graph (O(n*|E|)) can cost more than comparing each nodes (O(n^2)) : eg : Complete graph : n*|E| = n*sum_i_in{1...n-1}(i) > O(n^2) for n>3
 
 	long int i=0, j=0;
@@ -560,7 +562,7 @@ printf("\n");
 
 
 
-map<int,double>* solve_linear_model(double range, double lb)
+map<int,double>* Solution::solve_linear_model(double range, double lb)
 {
 
 	int i=0,j=0;
@@ -769,7 +771,7 @@ printf("RANGE %f, lb %f\n",range,lb);
 
 
 
-bool uav_in_cover(vector<int> &gcovs, int uavindex){
+bool Solution::uav_in_cover(vector<int> &gcovs, int uavindex){
 	for(int i=0; i<gcovs.size(); i++){
 		if(gcovs[i]==uavindex)
 			return true;
@@ -779,7 +781,7 @@ bool uav_in_cover(vector<int> &gcovs, int uavindex){
 
 
 
-void updateDistMat(double range)
+void Solution::updateDistMat(double range)
 {// updates the matrix of distances, reminder :
 	// vector<vector<int>> outdeg;// 1. outdegree relation of uav, note: j < outdeg[j] to avoid symmetries
 	// vector<vector<double>> distuav;// dists[j][outdeg[j]] = distance between uav j and uav outdeg[j]

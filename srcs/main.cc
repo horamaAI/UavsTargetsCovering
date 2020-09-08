@@ -15,6 +15,9 @@
 #include <tuple>
 #include <stack>
 
+#include "heads/clustering.h"
+
+
 using namespace std;
 
 inline
@@ -40,7 +43,7 @@ double bound_2;
 int main(int argc, char** argv)
 {
 
-clock_t begin = clock();
+	clock_t begin = clock();
 
 	/* !!! igraph : turn on attribute handling  Ie. even if you don't manipulate attributes explicitly, but create a graph that might have some attributes, eg. read a graph a GraphML file, you need this call before, otherwise the attributes are dropped. */
 	igraph_i_set_attribute_table(&igraph_cattribute_table);
