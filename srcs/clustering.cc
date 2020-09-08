@@ -1,3 +1,5 @@
+#include "heads/clustering.h"
+
 double k_means(double** data, int ngrounds, vector<double*>* clusts, double error_tolerance, double range)
 {
 

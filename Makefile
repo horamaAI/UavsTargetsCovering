@@ -7,8 +7,8 @@ CFLAGS = -g -Wall  -lglpk -ligraph -lm
 # Build target executable
 TARGET = srcs/main
 
-all: $(TARGET).cpp
-	$(CPP) -o a.out $(TARGET).cpp $(CFLAGS)
+all: $(TARGET).cc
+	$(CPP) -o a.out $(TARGET).cc $(CFLAGS)
 
 clean:
 	rm $(TARGET)
