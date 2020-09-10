@@ -156,7 +156,7 @@ printf("Stopping condition holds : wss_minus_1-wss > elbow_ratio*prev_deviation 
 	fclose(fp);
 */
 
-	Solution* rawsln=new Solution;// create first raw solution
+	Solution* rawsln=new Solution();// create first raw solution
 	rawsln->gcovs=new vector<int>[nbr_grnds];
 	
 	double* buffdouble;

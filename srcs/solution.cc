@@ -1,5 +1,9 @@
 #include "heads/solution.h"
 
+Solution::Solution(){
+
+}
+
 void Solution::addTonetwork(sln* net, double *toadd, double range)
 {// updates the matrix of distances to avoid constantly having to compute them
 
@@ -203,19 +207,19 @@ cout<<"Duplicate uav for node "<<grndi<<endl;
 	do
 	{
 		// duplicate one of the uavs covering ground node i
-		randindex=rand()%net->gcovs[grndi].size();
-		uavj=net->gcovs[grndi][randindex];
+		randindex=rand()%net->gcovs_[grndi].size();
+		uavj=net->gcovs_[grndi][randindex];
 cout<<"Selected "<<net->uavs[uavj][0]<<","<<net->uavs[uavj][1]<<endl;
 		buff=new double[dim];
 		for(j=0;j<dim;j++)
 			buff[j]=net->uavs[uavj][j];
 		addTonetwork(net, buff, range);// update distance of network of uavs, does also call to 'find_covers'
 	/* Keep duplicating until constraint on lb is satisfied */
-	}while(net->gcovs[grndi].size() < lb);
+	}while(net->gcovs_[grndi].size() < lb);
 
 /*
 printf("Duplicated : ");
-for(int a:net->gcovs[grndi])
+for(int a:net->gcovs_[grndi])
 printf(" %d ", a);
 printf("\n");
 */
@@ -230,11 +234,11 @@ void Solution::find_covers(int uavj, double range)
 		
 	for(i=0;i<nbr_grnds;i++)
 	{
-//		if( euclDistance(net->uavs[uavj],grnds[i]) <= range && !uav_in_cover(net->gcovs[i], uavj))
+//		if( euclDistance(net->uavs[uavj],grnds[i]) <= range && !uav_in_cover(net->gcovs_[i], uavj))
 		if( euclDistance(net->uavs[uavj],grnds[i]) <= range )
 		{
 if(i==63) cout << " uav: " << uavj << " - " << net->uavs[uavj][0] << "," << net->uavs[uavj][1] << endl;
-			net->gcovs[i].push_back(uavj);
+			net->gcovs_[i].push_back(uavj);
 			net->uavcovs[uavj].push_back(i);
 		}
 	}
@@ -575,11 +579,11 @@ map<int,double>* Solution::solve_linear_model(double range, double lb)
 	for(i=0;i<nbr_grnds;i++)
 	{
 //		/* Create duplicate if constraint not satisfied => select randomly uavs covering i to duplicate, and update covers */
-		if( net->gcovs[i].size() < lb )
+		if( net->gcovs_[i].size() < lb )
 		{
-printf("Duplicate uavs for gnode %d, which is covered with %d uavs \n", i, net->gcovs[i].size());
+printf("Duplicate uavs for gnode %d, which is covered with %d uavs \n", i, net->gcovs_[i].size());
 for(int z=0;z<net->uavs.size();z++){
-//int buffz=net->gcovs[i][z];
+//int buffz=net->gcovs_[i][z];
 cout<<net->uavs[z][0]<<","<<net->uavs[z][1]<<endl;
 }
 			duplicate(lb, net, i, range);
@@ -742,7 +746,7 @@ printf("RANGE %f, lb %f\n",range,lb);
 			int uavk=it->first;
 			if( euclDistance(net->uavs[uavk],grnds[i]) <= range )
 			{
-				assert(uav_in_cover(net->gcovs[i], uavk));// security safety, otherwise would be a problem
+				assert(uav_in_cover(net->gcovs_[i], uavk));// security safety, otherwise would be a problem
 				fprintf(fp,"%lf,%lf\n", grnds[i][0], grnds[i][1]);
 				fprintf(fp,"%lf,%lf\n\n", net->uavs[uavk][0], net->uavs[uavk][1]);
 				activecovers[i]++;
