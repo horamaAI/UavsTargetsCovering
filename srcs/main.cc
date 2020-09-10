@@ -3,7 +3,6 @@
 //#include "linear_solver.hpp"
 //#include <stdlib>
 #include <iostream>
-#include <stdio.h>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
@@ -157,7 +156,7 @@ printf("Stopping condition holds : wss_minus_1-wss > elbow_ratio*prev_deviation 
 	fclose(fp);
 */
 
-	sln* rawsln=new sln;// create first raw solution
+	Solution* rawsln=new Solution();// create first raw solution
 	rawsln->gcovs=new vector<int>[nbr_grnds];
 	
 	double* buffdouble;

@@ -1,6 +1,8 @@
 #ifndef UAVSCOVS_HEADS_SOLUTION_H_
 #define UAVSCOVS_HEADS_SOLUTION_H_
 
+#include <stdio.h>
+
 #include <vector>
 #include <igraph.h>
 #include <glpk.h>
@@ -8,13 +10,13 @@
 
 class Solution{
 
-	vector<double*> uavs;// coordinates of uavs (vector of pointers to arrays)
-	vector<int> *gcovs;// for each ground node, the indices of uavs covering it
-	vector<vector<int>> uavcovs;// for each uav, the ground node it covers: inverse of gcovs
+	vector<double*> uavs_;// coordinates of uavs (vector of pointers to arrays)
+	vector<int> *gcovs_;// for each ground node, the indices of uavs covering it
+	vector<vector<int>> uavcovs_;// for each uav, the ground node it covers: inverse of gcovs
 
 	// adjacency list of distances between uavs. Two structs:
-	vector<vector<int>> outdeg;// 1. outdegree relations of uav. Note: uav j < uav outdeg[j] to avoid symmetries
-	vector<vector<double>> distuav;// 2. dists[j][outdeg[j]] = distance between uav j and uav outdeg[j]
+	vector<vector<int>> outdeg_;// 1. outdegree relations of uav. Note: uav j < uav outdeg[j] to avoid symmetries
+	vector<vector<double>> distuav_;// 2. dists[j][outdeg[j]] = distance between uav j and uav outdeg[j]
 	//igraph_t* gr;// graph of the solution. Needed for connectivity checking
 
     void addTonetwork(double *toadd, double range);
