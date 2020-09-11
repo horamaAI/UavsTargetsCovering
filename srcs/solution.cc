@@ -4,34 +4,36 @@ Solution::Solution(){
 	printf("Empty args cnstrctor");
 }
 
-void Solution::addTonetwork(sln* net, double *toadd, double range)
+void Solution::addTonetwork(double *toadd, double range)
 {// updates the matrix of distances to avoid constantly having to compute them
 
-	net->uavs_.push_back(toadd);
-	int i, newuav=net->uavs_.size()-1;
+	this->uavs_.push_back(toadd);
+	int i, newuav=this->uavs_.size()-1;
 	double dist=0;
 
-	// or could also : push_back(std::vector<int>()), then net->outdeg_[i].push_back()
-	net->outdeg_.resize(net->outdeg_.size()+1);
-	net->distuav_.resize(net->distuav_.size()+1);
-	net->uavcovs_.resize(net->uavcovs_.size()+1);
+	// or could also : push_back(std::vector<int>()), then this->outdeg_[i].push_back()
+	this->outdeg_.resize(this->outdeg_.size()+1);
+	this->distuav_.resize(this->distuav_.size()+1);
+	this->uavcovs_.resize(this->uavcovs_.size()+1);
 
 	for(i=0;i<newuav;i++)
 	{
-		dist=euclDistance(net->uavs_[i],net->uavs_[newuav]);
+		dist=euclDistance(this->uavs_[i], this->uavs_[newuav]);
 		if(dist<=range){
-			net->outdeg_[i].push_back(newuav);
-			net->distuav_[i].push_back(dist);
+			this->outdeg_[i].push_back(newuav);
+			this->distuav_[i].push_back(dist);
 		}
 	}
-	find_covers(net, newuav, range);// find the ground the new uav covers
+	this->find_covers(newuav, range);// find the ground the new uav covers
 };
 
 
 
-void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity, stack<tuple<int,int>>* pairs, bool dorestriction)
-{// The boolean value "restrict" says wether the restriction strategy should be used (restrict is false, and G isn't root G0), or not.
-	// In restriction not applied, then fill : **restr_list, **pairs, and * npairs. Otherwise, use these lists to apply the restrictions
+void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity, stack<tuple<int,int>>* pairs,
+							bool dorestriction)
+{// boolean value "restrict" says wether the restriction strategy used (restrict: false, and G isn't root G0), or not.
+	// If restriction not applied, then fill : **restr_list, **pairs, and * npairs.
+	// Otherwise, use these lists to apply the restrictions
 
 printf("net n_uavs %d threshold %f and restrict %d\n", net->uavs_.size(), range, dorestriction);
 //printf(" vcount %li ecount %li\n", (long int)igraph_vcount(Gk), (long int)igraph_ecount(Gk));
@@ -234,12 +236,12 @@ void Solution::find_covers(int uavj, double range)
 		
 	for(i=0;i<nbr_grnds;i++)
 	{
-//		if( euclDistance(net->uavs_[uavj],grnds[i]) <= range && !uav_in_cover(net->gcovs_[i], uavj))
-		if( euclDistance(net->uavs_[uavj],grnds[i]) <= range )
+//		if( euclDistance(this->uavs_[uavj],grnds[i]) <= range && !uav_in_cover(this->gcovs_[i], uavj))
+		if( euclDistance(this->uavs_[uavj],grnds[i]) <= range )
 		{
-if(i==63) cout << " uav: " << uavj << " - " << net->uavs_[uavj][0] << "," << net->uavs_[uavj][1] << endl;
-			net->gcovs_[i].push_back(uavj);
-			net->uavcovs_[uavj].push_back(i);
+if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << this->uavs_[uavj][1] << endl;
+			this->gcovs_[i].push_back(uavj);
+			this->uavcovs_[uavj].push_back(i);
 		}
 	}
 };
