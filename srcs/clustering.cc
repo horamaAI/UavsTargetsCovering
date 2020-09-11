@@ -144,3 +144,88 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 
 	return res;
 };
+
+
+vector<double*>* elbow(){
+
+	vector<double*>* res;// true result + 1
+	vector<double*>* res_plus_1;// true result + 1
+	vector<double*>* res_plus_2;// true result + 2 and current result
+	vector<double*>* del;// pointer to result to be freed
+
+	/* Elbow criteria : if 2 next wss are close : deviation(res+1,res+2) > 3/4*(deviation(res,res+1)) */
+	int i=1,j=0;
+
+	// to generate the covers
+	double prev_deviation=0,wss_minus_1=0,wss=0;/* Caution : wss isn't one of the true result but result+2 */
+	double elbow_ratio=0.7;// if new deviation less than three quarters of previous deviation
+	// !!! Personal note : if ratio is too low, about 0.001, then there are issues, check if time.!!!!
+
+	bool stop=false;
+
+printf("nbr grnds : %d\n",nbr_grnds);
+
+	do{
+		
+		// do until elbow criteria satisfied:
+		res_plus_2=onepassmethod(grnds, nbr_grnds, range/i);
+		wss=k_means(grnds, nbr_grnds, res_plus_2, 0.0001, range/i);
+printf("i %d, wss. %f, n_uavs %d\n", i, wss, res_plus_2->size());
+		i++;
+		if(i<=3)
+		{
+			if(i==2)
+			{
+				prev_deviation=wss;
+				res=res_plus_2;// just stores result
+				continue;// and go to next ite			
+			}
+			prev_deviation=prev_deviation-wss;
+			wss_minus_1=wss;
+			res_plus_1=res_plus_2;// just stores result
+			continue;// and go to next ite			
+		}
+//printf(", S:%f-%f=%f\n", prev_deviation, wss, prev_wss-wss);
+
+		if(wss_minus_1-wss > elbow_ratio*prev_deviation)
+		{
+printf("Stopping condition holds : wss_minus_1-wss > elbow_ratio*prev_deviation :\n\ti %d, w-1. %f, wss. %f, prevd. %f, ratio. %f, dev %f, f. %d, g. res_plus_1->n_uavs : %d uavs, res->n_uavs : %d uavs\n"
+	, i, wss_minus_1, wss, prev_deviation, elbow_ratio*prev_deviation, wss_minus_1-wss, wss_minus_1-wss < elbow_ratio*prev_deviation, res_plus_1->size(), res->size());
+
+			// housekeeping
+			for(j=0;j<res_plus_1->size();j++)
+			{
+				delete[] (*res_plus_1)[j];
+				(*res_plus_1)[j]=nullptr;
+			}
+			delete res_plus_1;// no longer needed, as only true result "res" is returned
+			res_plus_1=nullptr;
+			for(j=0;j<res_plus_2->size();j++)
+			{
+				delete[] (*res_plus_2)[j];
+				(*res_plus_2)[j]=nullptr;
+			}
+			delete res_plus_2;// same
+			res_plus_2=nullptr;
+			stop=true;
+		}
+		else{/* keep reducing the radius */
+
+			prev_deviation=wss_minus_1-wss;
+			wss_minus_1=wss;
+			del=res;
+			res=res_plus_1;// store result
+			res_plus_1=res_plus_2;
+			// housekeeping
+			for(j=0;j<del->size();j++)
+			{
+				delete[] (*del)[j];
+				(*del)[j]=nullptr;
+			}
+			delete del;//Housekeeping
+			del=nullptr;
+		}
+	}while(!stop && wss>0);/// !!!!!!!!!!!!!!!!!!!!! CAREFUL!!! CHECK STOPPING CONDITION (wss>0???)
+//	}while(i<1);
+
+}

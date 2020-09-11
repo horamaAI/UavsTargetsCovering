@@ -1,7 +1,7 @@
 #include "heads/solution.h"
 
 Solution::Solution(){
-
+	printf("Empty args cnstrctor");
 }
 
 void Solution::addTonetwork(sln* net, double *toadd, double range)
