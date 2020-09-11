@@ -27,16 +27,6 @@ inline
 int MEMO_FAIL(const char *FROM_FILE, int AT_LINE, const char *IN_FUNCTION)
 {printf("MEMO_ALLOC_FAILURE, line %d, function %s, file %s\n", AT_LINE, IN_FUNCTION, FROM_FILE);return EXIT_FAILURE;};
 
-int max_uavs_avail;
-int nbr_grnds;
-int dim=2;			// dimension of input vectors
-double** grnds;		// All ground nodes coordinates
-double uavs_range;	// all ranges of available uavs
-
-// limit of map
-double bound_1;
-double bound_2;
-
 
 
 int main(int argc, char** argv)

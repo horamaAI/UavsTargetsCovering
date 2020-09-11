@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#include "inputdata.h"
+
 #include <vector>
 #include <igraph.h>
 #include <glpk.h>
@@ -30,7 +32,6 @@ class Solution{
     void updateDistMat(double range);
 
 }
-
 
 
 #endif // UAVSCOVS_HEADS_SOLUTION_H_
