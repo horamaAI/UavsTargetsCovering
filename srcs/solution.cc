@@ -58,7 +58,7 @@ printf("n_uavs %d, k = %d, %d\n", net->uavs_.size(), k++, ncomps);
 
 		if(igraph_vector_init(&labels, 0)==IGRAPH_ENOMEM || igraph_vector_init(&compssizes, 0)==IGRAPH_ENOMEM)
 			printf(" Memory issues, vector init failed %s, %d, %s \n", __FILE__, __LINE__, __FUNCTION__);
-			
+
 		// compute number of connected components
 		igraph_clusters(Gk, &labels, &compssizes, &ncomps, IGRAPH_WEAK);
 
