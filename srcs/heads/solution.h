@@ -1,14 +1,8 @@
 #ifndef UAVSCOVS_HEADS_SOLUTION_H_
 #define UAVSCOVS_HEADS_SOLUTION_H_
 
-#include <stdio.h>
-
 #include "inputdata.h"
 
-#include <vector>
-#include <igraph.h>
-#include <glpk.h>
-#include <map>
 
 class Solution{
 
