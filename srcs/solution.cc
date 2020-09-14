@@ -35,7 +35,7 @@ void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnecti
 	// If restriction not applied, then fill : **restr_list, **pairs, and * npairs.
 	// Otherwise, use these lists to apply the restrictions
 
-printf("net n_uavs %d threshold %f and restrict %d\n", net->uavs_.size(), range, dorestriction);
+printf("net n_uavs %d threshold %f and restrict %d\n", this->uavs_.size(), range, dorestriction);
 //printf(" vcount %li ecount %li\n", (long int)igraph_vcount(Gk), (long int)igraph_ecount(Gk));
 
 	igraph_integer_t ncomps=-1;// numbers of connected components
@@ -48,13 +48,14 @@ printf("net n_uavs %d threshold %f and restrict %d\n", net->uavs_.size(), range,
 	// brute force : create one unique connected component by iteratively branching the 2 closest connected components
 	// From here, a bit of a mess, pay attention to segmentation faults, clean ASAP
 	int i=0, j=0, k=0, added=0;
-	// Note : avoid doing : bool restricted=false; and restrict once only. If done so, it's possible that on the next phases restricted (n1,n2)
+	// Note : avoid doing : bool restricted=false; and restrict once only. If done so, it's possible that on the next 
+	// phases restricted (n1,n2)
 	// is included anyway and that we end up with a graph that was already generated. Then : always restrict (n1,n2) in new G.
 
 	bool restricted=false;// restriction is performed once only
 	do
 	{
-printf("n_uavs %d, k = %d, %d\n", net->uavs_.size(), k++, ncomps);
+printf("n_uavs %d, k = %d, %d\n", this->uavs_.size(), k++, ncomps);
 
 		if(igraph_vector_init(&labels, 0)==IGRAPH_ENOMEM || igraph_vector_init(&compssizes, 0)==IGRAPH_ENOMEM)
 			printf(" Memory issues, vector init failed %s, %d, %s \n", __FILE__, __LINE__, __FUNCTION__);
@@ -72,27 +73,29 @@ printf("n_uavs %d, k = %d, %d\n", net->uavs_.size(), k++, ncomps);
 		// free first used memory since initiated again later
 		igraph_vector_destroy(&compssizes);
 
-		// if graph not a single connected component, then update matrix of distance with new uavs. Note : exists isolated vertex 0
+		// if graph not a single connected component, then update matrix of distance with new uavs. Note : exists
+		// isolated vertex 0
 		if(ncomps>1)
 		{//add new node to reach one connected component
 // printf("In ncomps %d connected components\n", ncomps);
 			min_distance=DBL_MAX;
 			// find two closest but out of range nodes
-			for (i=0;i<net->uavs_.size();i++)
+			for (i=0;i<this->uavs_.size();i++)
 			{
-				for (j=i+1;j<net->uavs_.size();j++)
+				for (j=i+1;j<this->uavs_.size();j++)
 				{
 					// Not interested in nodes in same connected component
 					if ( VECTOR(labels)[i] == VECTOR(labels)[j] )	continue;
 					/* Find closest clusters but out of range */
-					current_distance=euclDistance(net->uavs_[i], net->uavs_[j]);
+					current_distance=euclDistance(this->uavs_[i], this->uavs_[j]);
 					// check only if different connected component
 					if(current_distance<min_distance)
 					{// keep two nodes
 						if( dorestriction && !restricted && get<0>(pairs->top()) == i && get<1>(pairs->top()) == j )
 						{// restricted, skip
 printf("i uav2 n1 n2 pairs[0] pairs[1] : %d %d %d %d %d %d %d\n", i, j, n1, n2, get<0>(pairs->top()), get<1>(pairs->top()));
-printf("tests in \"restricted\", (pairs[0] == n1), (pairs[1] == n2) : %d %d %d\n", get<0>(pairs->top()) == n1, get<1>(pairs->top()) == n2);
+printf("tests in \"restricted\", (pairs[0] == n1), (pairs[1] == n2) : %d %d %d\n", get<0>(pairs->top()) == n1,
+	get<1>(pairs->top()) == n2);
 							restricted=true;
 							continue;
 						}
@@ -112,28 +115,31 @@ long int zz=igraph_vcount(Gk);
 
 			if(n1<0 || n2<0)
 			{
-				printf(" Something went wrong with graph, check since adding new uav will fail %s, %d, %s \n", __FILE__, __LINE__, __FUNCTION__);
+				printf(" Something went wrong with graph, check since adding new uav will fail %s, %d, %s \n",
+					__FILE__, __LINE__, __FUNCTION__);
 				return;
 			}
-cerr<< "use ("<< net->uavs_[n1][0] << "," << net->uavs_[n1][1]<< ") and ("<< net->uavs_[n2][0] << "," << net->uavs_[n2][1]<<")"<<endl;
+cerr<< "use ("<< this->uavs_[n1][0] << "," << this->uavs_[n1][1]<< ") and ("<< this->uavs_[n2][0] << ","
+			<< this->uavs_[n2][1]<<")"<<endl;
 			// assign coordinates of new created node : middle of segment [n1,n2]
 			double* buffdouble=new double[dim];
 			for (j=0;j<dim;j++)
-				buffdouble[j]=(net->uavs_[n1][j]+net->uavs_[n2][j])/2;
-			addTonetwork(net, buffdouble, range);// update distance of network of uavs
+				buffdouble[j]=(this->uavs_[n1][j]+this->uavs_[n2][j])/2;
+			this->addTonetwork(buffdouble, range);// update distance of network of uavs
 
-			uavsconnectivity->push_back(net->uavs_.size()-1);// keep track of uavs used for connectivity
+			uavsconnectivity->push_back(this->uavs_.size()-1);// keep track of uavs used for connectivity
 
 			// add new vertex and edges to graph
 			igraph_add_vertices(Gk, 1, 0);			
 
-cerr<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size() = " << net->uavs_.size() << " |E(G)|"<< (long int)igraph_ecount(Gk)<<endl;
+cerr<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size() = " << this->uavs_.size() << " |E(G)|"
+	<< (long int)igraph_ecount(Gk)<<endl;
 
-			int lastuav=net->uavs_.size()-1;
-			for (i=0;i<net->uavs_.size();i++)
+			int lastuav=this->uavs_.size()-1;
+			for (i=0;i<this->uavs_.size();i++)
 			{
-				for (j=0;j<net->outdeg_[i].size();j++){
-					if(net->outdeg_[i][j]==lastuav){// add edges with new uav to graph
+				for (j=0;j<this->outdeg_[i].size();j++){
+					if(this->outdeg_[i][j]==lastuav){// add edges with new uav to graph
 //cout<< "A LEAST THIS DOES WORK " <<i<<"-"<<j<< endl;
 						igraph_add_edge(Gk, i, lastuav);
 					}
@@ -159,10 +165,12 @@ cerr<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size() 
 //}
 //printf("1. dist n_uav-n1 : %lf, thresh : %lf, nuav : %d, n1 : %d\n", net->dists[net->n_uavs][n1], threshold, net->n_uavs, n1);
 //printf("2. dist n_uav-n2 : %lf, thresh : %lf, nuav : %d, n2 : %d\n", net->dists[net->n_uavs][n2], threshold, net->n_uavs, n2);
-//printf(" %d and %d coords (%lf,%lf) (%lf,%lf)\n", n1, n2, net->uavs_[n1][0], net->uavs_[n1][1], net->uavs_[n2][0], net->uavs_[n2][1]);
+//printf(" %d and %d coords (%lf,%lf) (%lf,%lf)\n", n1, n2, net->uavs_[n1][0], net->uavs_[n1][1], net->uavs_[n2][0],
+//		net->uavs_[n2][1]);
 //printf("dist n1-n2 after update %d - %d\n",(int)net->dists[n2][n1],(int)net->dists[n1][n2]);
 
-//printf("with %li vertices, and new uav %d coords (%lf,%lf)\n", (long int)igraph_vcount(&net->gr), net->n_uavs, net->uavs_[net->n_uavs][0], net->uavs_[net->n_uavs][1]);
+//printf("with %li vertices, and new uav %d coords (%lf,%lf)\n", (long int)igraph_vcount(&net->gr), net->n_uavs,
+//		net->uavs_[net->n_uavs][0], net->uavs_[net->n_uavs][1]);
 //printf(" vcount %li ecount %li\n", (long int)igraph_vcount(&net->gr), (long int)igraph_ecount(&net->gr));
 		}
 
@@ -187,7 +195,8 @@ cerr<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size() 
 		fprintf(fout,"%lf,%lf\n", net->uavs_[ind2first][0], net->uavs_[ind2first][1]);
 		fprintf(fout,"\n");
 //printf("(%ld,%ld)\t", ind1first, ind2first);
-//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1], net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
+//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
+//		net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
 	}
 //printf("\n");
 //printf("Tests vcount %li ecount %li, nuavs %d\n", (long int)igraph_vcount(Gk), (long int)igraph_ecount(Gk), net->n_uavs);
@@ -209,15 +218,15 @@ cout<<"Duplicate uav for node "<<grndi<<endl;
 	do
 	{
 		// duplicate one of the uavs covering ground node i
-		randindex=rand()%net->gcovs_[grndi].size();
-		uavj=net->gcovs_[grndi][randindex];
-cout<<"Selected "<<net->uavs_[uavj][0]<<","<<net->uavs_[uavj][1]<<endl;
+		randindex=rand()%this->gcovs_[grndi].size();
+		uavj=this->gcovs_[grndi][randindex];
+cout<<"Selected "<<this->uavs_[uavj][0]<<","<<this->uavs_[uavj][1]<<endl;
 		buff=new double[dim];
 		for(j=0;j<dim;j++)
-			buff[j]=net->uavs_[uavj][j];
-		addTonetwork(net, buff, range);// update distance of network of uavs, does also call to 'find_covers'
+			buff[j]=this->uavs_[uavj][j];
+		this->addTonetwork(buff, range);// update distance of network of uavs, does also call to 'find_covers'
 	/* Keep duplicating until constraint on lb is satisfied */
-	}while(net->gcovs_[grndi].size() < lb);
+	}while(this->gcovs_[grndi].size() < lb);
 
 /*
 printf("Duplicated : ");
@@ -249,15 +258,16 @@ if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << th
 
 
 void Solution::populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0, stack<tuple<int,int>>* pairs)
-{// note : computing diameter of graph (O(n*|E|)) can cost more than comparing each nodes (O(n^2)) : eg : Complete graph : n*|E| = n*sum_i_in{1...n-1}(i) > O(n^2) for n>3
+{// note : computing diameter of graph (O(n*|E|)) can cost more than comparing each nodes (O(n^2)) : eg : Complete
+ // graph : n*|E| = n*sum_i_in{1...n-1}(i) > O(n^2) for n>3
 
 	long int i=0, j=0;
 //	long int k=0;
 
 	/* the goal of the step is to generate the best NINDIVS by unpiling (Start with last) the list of edges added to the first
 	 * graph (solnsGraphs[0]) in order to create the unique connected component. The restriction on the current level of edges
-	 * to unpile is given by k (if can't use c++ stl's 'stack'). The number of vertices to start with on each iteration is n_in_first_graph-k-1
-	 * where n_in_first_graph is the number of vertices in the first connected graph. */
+	 * to unpile is given by k (if can't use c++ stl's 'stack'). The number of vertices to start with on each iteration
+	 * is n_in_first_graph-k-1, where n_in_first_graph is the number of vertices in the first connected graph. */
 	// long int n_in_first_graph=(long int)igraph_vcount(solnsGraphs[0]);
 
 	// Use of a brute force branching here. Maybe undeterministic could work better.
@@ -288,11 +298,13 @@ int count=0;
 	}
 
 printf("\nend 1st graph and count %d\n",count);
-printf("Before connectCCs vcount %li ecount %li and n_uavs %d\n", (long int)igraph_vcount(solnG0), (long int)igraph_ecount(solnG0), covers->uavs_.size());
+printf("Before connectCCs vcount %li ecount %li and n_uavs %d\n", (long int)igraph_vcount(solnG0), (long int)igraph_ecount(solnG0),
+	covers->uavs_.size());
 
 	connect_CCs(covers, solnG0, range, uavsconnectivity, pairs, false);
 
-printf("Test npairs == %d and should be one connected component (passed connectCCs function)\n", pairs->size(), covers->uavs_.size());
+printf("Test npairs == %d and should be one connected component (passed connectCCs function)\n", pairs->size(),
+	covers->uavs_.size());
 
 	// Now that more variables are assigned => launch true populating phase
 	// solnsGraphs=(igraph_t**)malloc((*npairs)*sizeof(igraph_t*));
@@ -319,7 +331,8 @@ printf("Test npairs == %d and should be one connected component (passed connectC
 			fprintf(fout,"%lf,%lf\n", covers->uavs_[ind2][0], covers->uavs_[ind2][1]);
 			fprintf(fout,"\n");
 //	printf("(%ld,%ld)\t", ind1, ind2);
-//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1], net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
+//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
+//		net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
 		}
 //	printf("\n");
 		fclose(fout);
@@ -349,8 +362,8 @@ for(i=1;i<=nbr_grnds;i++)	overallredundancy+=covers->g_covers[i];
 printf("G_0 has overall redundancy of %d\n",overallredundancy);
 
 		if(*npairs%2==0)
-		{// we want n even number of generated files, if there are npairs of newly generated files, if added to the starting graph, we are still
-			// short of one file => easiest solution : copy starting solution in file named [blabla]_[npairs+1]
+		{// we want n even number of generated files, if there are npairs of newly generated files, if added to the starting graph,
+		//	we are still short of one file => easiest solution : copy starting solution in file named [blabla]_[npairs+1]
 			strcpy(path,"./out/G_");
 			sprintf(buff, "%d", *npairs+1);
 			strcat(path,buff);
@@ -366,7 +379,8 @@ printf("G_0 has overall redundancy of %d\n",overallredundancy);
 				fprintf(fout,"%lf,%lf\n", covers->uavs_[ind2][0], covers->uavs_[ind2][1]);
 				fprintf(fout,"\n");
 	//	printf("(%ld,%ld)\t", ind1, ind2);
-	//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1], net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
+	//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
+	//			net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
 			}
 	//	printf("\n");
 			fclose(fout);
@@ -387,8 +401,9 @@ printf("G_0 has overall redundancy of %d\n",overallredundancy);
 	for (k=0; k < *npairs; k++)
 	{
 		buffnets=(sln*)malloc(sizeof(sln));
-		// some values are not needed for filling (and allocation) since only the position of uavs (and distance between them) are wanted, as well
-		// as the connections between them. Other operations (eg:what are the ground nodes covered by a given uav ?) are performed in the MLMPGA
+		// some values are not needed for filling (and allocation) since only the position of uavs (and distance between them)
+		// are wanted, as well as the connections between them. Other operations (eg:what are the ground nodes covered by a
+		// given uav ?) are performed in the MLMPGA
 		buffnets->n_uavs=covers->n_uavs-k-1;
 //printf("net->n_uavs %d and covers->n_uavs-k-1 %ld and k %ld\n", buffnets->n_uavs, covers->n_uavs-k-1, k);
 		buffnets->uavs_=(double**)malloc((covers->n_uavs*5)*sizeof(double*));
@@ -409,7 +424,8 @@ printf("G_0 has overall redundancy of %d\n",overallredundancy);
 		Gk=(igraph_t*)malloc(sizeof(igraph_t));
 
 		if(igraph_empty(Gk, buffnets->n_uavs+1, IGRAPH_UNDIRECTED)==IGRAPH_EINVAL)
-			printf("Ite %d Invalid number of vertices, graph initialisation failed %s, %d, %s \n", (int)k, __FILE__, __LINE__, __FUNCTION__);
+			printf("Ite %d Invalid number of vertices, graph initialisation failed %s, %d, %s \n", (int)k,
+				__FILE__, __LINE__, __FUNCTION__);
 
 //printf("Phase 1 : Edges found while comparing distances\n");
 //\/\* ------------------------------- Start independent comments
@@ -475,7 +491,8 @@ printf("K ite %li\n", k);
 			fprintf(fout,"%lf,%lf\n", buffnets->uavs_[ind2][0], buffnets->uavs_[ind2][1]);
 			fprintf(fout,"\n");
 //	printf("(%ld,%ld)\t", ind1, ind2);
-//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1], net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
+//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
+//			net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
 		}
 //	printf("\n");
 		fclose(fout);
@@ -532,7 +549,8 @@ if(++k==1)
 		fprintf(fout,"%lf,%lf\n", net->uavs_[ind2first][0], net->uavs_[ind2first][1]);
 		fprintf(fout,"\n");
 printf("(%ld,%ld)\t", ind1first, ind2first);
-//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1], net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
+//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
+//		net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
 	}
 printf("\n");
 	fclose(fout);
@@ -556,7 +574,8 @@ printf("\n");
 		fprintf(fp,"%lf,%lf\n", net->uavs_[ind2][0], net->uavs_[ind2][1]);
 		fprintf(fp,"\n");
 printf("(%ld,%ld)\t", ind1, ind2);
-//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1], net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
+//fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
+//		net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
 	}
 printf("\n");
 	fclose(fp);
@@ -577,18 +596,19 @@ map<int,double>* Solution::solve_linear_model(double range, double lb)
 //	find_covers(net, range);
 
 //	bool changedstate=false;
-	/* Find at least one uav that needs to be replicated so that a minimum cover constraint isn't violated : at least lb covers for each target */
+	/* Find at least one uav that needs to be replicated so that a minimum cover constraint isn't violated : at least
+		lb covers for each target */
 	for(i=0;i<nbr_grnds;i++)
 	{
 //		/* Create duplicate if constraint not satisfied => select randomly uavs covering i to duplicate, and update covers */
-		if( net->gcovs_[i].size() < lb )
+		if( this->gcovs_[i].size() < lb )
 		{
-printf("Duplicate uavs for gnode %d, which is covered with %d uavs \n", i, net->gcovs_[i].size());
-for(int z=0;z<net->uavs_.size();z++){
+printf("Duplicate uavs for gnode %d, which is covered with %d uavs \n", i, this->gcovs_[i].size());
+for(int z=0;z<this->uavs_.size();z++){
 //int buffz=net->gcovs_[i][z];
-cout<<net->uavs_[z][0]<<","<<net->uavs_[z][1]<<endl;
+cout<<this->uavs_[z][0]<<","<<this->uavs_[z][1]<<endl;
 }
-			duplicate(lb, net, i, range);
+			this->duplicate(lb, i, range);
 //			if(!changedstate)	changedstate=true;
 //			break;
 		}
@@ -603,11 +623,11 @@ TO ERASE : Done in addTonetwork
 	}
 */
 
-printf("Begin building linear problem with %d ground nodes, and %d uavs\n", nbr_grnds, net->uavs_.size());
+printf("Begin building linear problem with %d ground nodes, and %d uavs\n", nbr_grnds, this->uavs_.size());
 	/* Build linear problem */
 	glp_prob *lp;
-	int ia[1+(nbr_grnds*net->uavs_.size())],ja[1+(nbr_grnds*net->uavs_.size())];
-	double ar[1+(nbr_grnds*net->uavs_.size())], z=0.;
+	int ia[1+(nbr_grnds*this->uavs_.size())],ja[1+(nbr_grnds*this->uavs_.size())];
+	double ar[1+(nbr_grnds*this->uavs_.size())], z=0.;
 	
 	lp = glp_create_prob();
 	glp_set_prob_name(lp, "set cover");
@@ -615,7 +635,7 @@ printf("Begin building linear problem with %d ground nodes, and %d uavs\n", nbr_
 
 	/* for row names */
 	char row_names[nbr_grnds+1][20];
-	char col_names[net->uavs_.size()+1][20];
+	char col_names[this->uavs_.size()+1][20];
 	char buff[20];
 
 	glp_add_rows(lp, nbr_grnds);
@@ -627,8 +647,8 @@ printf("Begin building linear problem with %d ground nodes, and %d uavs\n", nbr_
 		glp_set_row_bnds(lp, i+1, GLP_LO, lb, 0.0);
 	}
 
-	glp_add_cols(lp, net->uavs_.size());
-	for(j=0;j<net->uavs_.size();j++)
+	glp_add_cols(lp, this->uavs_.size());
+	for(j=0;j<this->uavs_.size();j++)
 	{
 		sprintf(buff,"x%d",j+1);
 		strcpy(col_names[j+1],buff);
@@ -644,16 +664,16 @@ printf("RANGE %f, lb %f\n",range,lb);
 	int counter=1;
 	for(i=0;i<nbr_grnds;i++)
 	{
-		for(j=0;j<net->uavs_.size();j++)
+		for(j=0;j<this->uavs_.size();j++)
 		{
 			ia[counter] = i+1;
 			ja[counter] = j+1;
-			ar[counter] = ( euclDistance(net->uavs_[j],grnds[i]) <= range ? 1.0 : 0.0 );
+			ar[counter] = ( euclDistance(this->uavs_[j],grnds[i]) <= range ? 1.0 : 0.0 );
 			counter++;
 		}
 	}
 
-	glp_load_matrix(lp, nbr_grnds*net->uavs_.size(), ia, ja, ar);
+	glp_load_matrix(lp, nbr_grnds*this->uavs_.size(), ia, ja, ar);
 
 /*
 	int ind[net->uavs_.size()+1];
@@ -665,7 +685,8 @@ printf("RANGE %f, lb %f\n",range,lb);
 			ind[j+1]=0;
 			val[j+1]=0;
 		}
-		int len=glp_get_mat_row(lp, i+1, ind, val);// stores non zero values of row 113 into "ind(indices of cols), val(non zero values)"
+		int len=glp_get_mat_row(lp, i+1, ind, val);// stores non zero values of row 113 into "ind(indices of cols),
+			val(non zero values)"
 //		printf(" LO %f, COL LO %f, COL UP %f %d\n",glp_get_row_lb(lp,113),glp_get_col_lb(lp,88),glp_get_col_ub(lp,88), len);
 		printf("gnode %d has %d, covers => ", i+1, len);
 		for(j=1;j<=len;j++)
@@ -686,7 +707,8 @@ printf("RANGE %f, lb %f\n",range,lb);
 	
 	/* Gather results */
 	map<int,double> *soln=new map<int,double>;
-	double sumrows=0, maxrowval=0, minrowval=net->uavs_.size(), tmp=0, lessThanAvrg=0, moreThanvrg=0;// Needed for stats on covers (constraints, rows)
+	// Needed for stats on covers (constraints, rows)
+	double sumrows=0, maxrowval=0, minrowval=this->uavs_.size(), tmp=0, lessThanAvrg=0, moreThanvrg=0;
 	double* covRes=(double*)calloc(nbr_grnds+1,sizeof(double));
 
 	for(i=0;i<nbr_grnds;i++)
@@ -701,7 +723,7 @@ printf("RANGE %f, lb %f\n",range,lb);
 		covRes[(int)tmp]++;
 	}
 
-	for(j=0;j<net->uavs_.size();j++)
+	for(j=0;j<this->uavs_.size();j++)
 	{
 //		soln[j]= glp_get_col_prim(lp, j);
 		double buffval=glp_mip_col_val(lp, j+1);
@@ -718,7 +740,8 @@ printf("RANGE %f, lb %f\n",range,lb);
 	for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
 		printf("[ %d : %f ] ", it->first, it->second);
 	
-	printf("\nRO == %f, max = %f, min = %f, aver = %f, lessThanAvrg = %f, moreThanvrg = %f\n",sumrows, maxrowval, minrowval, sumrows/nbr_grnds, lessThanAvrg, moreThanvrg);
+	printf("\nRO == %f, max = %f, min = %f, aver = %f, lessThanAvrg = %f, moreThanvrg = %f\n",sumrows, maxrowval,
+		minrowval, sumrows/nbr_grnds, lessThanAvrg, moreThanvrg);
 	for(i=0;i<=(int)maxrowval;i++)	if (covRes[i]>0) printf("cov[%d]=%f\t",i,covRes[i]);
 	printf("\n");
 	int activeuavs=0;
@@ -730,7 +753,7 @@ printf("RANGE %f, lb %f\n",range,lb);
 		for (j=0;j<dim;j++)
 		{
 			// skip comma not needed after last dim value
-			fprintf(fp,"%lf", net->uavs_[it->first][j]);
+			fprintf(fp,"%lf", this->uavs_[it->first][j]);
 			if(j==dim-1)	fprintf(fp,"\n");
 			else	fprintf(fp,",");
 		}
@@ -746,11 +769,11 @@ printf("RANGE %f, lb %f\n",range,lb);
 		for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
 		{
 			int uavk=it->first;
-			if( euclDistance(net->uavs_[uavk],grnds[i]) <= range )
+			if( euclDistance(this->uavs_[uavk],grnds[i]) <= range )
 			{
-				assert(uav_in_cover(net->gcovs_[i], uavk));// security safety, otherwise would be a problem
+				assert(uav_in_cover(this->gcovs_[i], uavk));// security safety, otherwise would be a problem
 				fprintf(fp,"%lf,%lf\n", grnds[i][0], grnds[i][1]);
-				fprintf(fp,"%lf,%lf\n\n", net->uavs_[uavk][0], net->uavs_[uavk][1]);
+				fprintf(fp,"%lf,%lf\n\n", this->uavs_[uavk][0], this->uavs_[uavk][1]);
 				activecovers[i]++;
 			}
 		}
@@ -796,17 +819,17 @@ void Solution::updateDistMat(double range)
 	double dist=0;
 	vector<tuple<int,int>> todel;// edges to eventually delete if new distance greater than 'range'
 
-	for(i=0;i<net->uavs_.size();i++)
+	for(i=0;i<this->uavs_.size();i++)
 	{
-		for(j=0;j<net->outdeg_[i].size();j++)
+		for(j=0;j<this->outdeg_[i].size();j++)
 		{
-			int adjac_uav=net->outdeg_[i][j];
-			dist=euclDistance(net->uavs_[i],net->uavs_[adjac_uav]);
+			int adjac_uav = this->outdeg_[i][j];
+			dist=euclDistance(this->uavs_[i], this->uavs_[adjac_uav]);
 			if (dist>range){
 				// remove edge if j and adjac_uav are too far apart, or one of the two uavs is unactive
 				todel.push_back(make_tuple(i,j));
 			}
-			net->distuav_[i][j]=dist;// expected to exist, created with calls to 'addTonetwork' 
+			this->distuav_[i][j]=dist;// expected to exist, created with calls to 'addTonetwork' 
 		}
 	}
 
@@ -814,8 +837,8 @@ void Solution::updateDistMat(double range)
 		for(i=0; i<todel.size(); i++){
 			int buffi=get<0>(todel[i]);
 			int buffj=get<1>(todel[i]);
-			net->outdeg_[buffi].erase(net->outdeg_[buffi].begin()+buffj);
-			net->distuav_[buffi].erase(net->distuav_[buffi].begin()+buffj);
+			this->outdeg_[buffi].erase(this->outdeg_[buffi].begin()+buffj);
+			this->distuav_[buffi].erase(this->distuav_[buffi].begin()+buffj);
 		}
 	}
 };
