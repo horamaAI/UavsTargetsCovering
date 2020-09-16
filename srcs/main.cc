@@ -30,14 +30,9 @@ int main(int argc, char** argv)
 
 	readData(argv);
 
-	//bound_1=1000;
-	//bound_2=1000;
-
 //	double radius=(uavs_range/2);
 	double range=uavs_range;
 
-//	sln *res=onepassmethod(grnds, nbr_grnds, radius);
-//	sln *trueres=onepassmethod(grnds, nbr_grnds, radius);
 	//translate(res, radius);
 
 	vector<double*>* res = elbow();
@@ -101,7 +96,7 @@ int main(int argc, char** argv)
 			
 			buffdouble[j]=rawsln->uavs_[it->first][j];
 		}
-		addTonetwork(net, buffdouble, range);// update distance of network of uavs
+		net->addTonetwork(buffdouble, range);// update distance of network of uavs
 	}
 //	fclose(fp);
 	
@@ -113,7 +108,7 @@ int main(int argc, char** argv)
 	igraph_t* solG0=nullptr;
 
 //	populate(net, uavscoverage, &uavsccs, range, solG0, pairs);
-	populate(net, &uavsccs, range, solG0, pairs);
+	net->populate(&uavsccs, range, solG0, pairs);
 
 
 	clock_t end = clock();
