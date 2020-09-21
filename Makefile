@@ -9,32 +9,34 @@ LFLAGS =
 #TARGET = main
 
 # Additionals
-OBJS	= main.o block.o clustering.o utils.o solution.o inputdata.o
+SRCS	= ./srcs
+HEADS 	= $(SRCS)/heads
+OBJS	= $(SRCS)/main.o $(SRCS)/block.o $(SRCS)/clustering.o $(SRCS)/utils.o $(SRCS)/solution.o $(SRCS)/inputdata.o
 SOURCE	= main.cc block.cc clustering.cc utils.cc solution.cc inputdata.cc
-HEADER	= ./heads/block.h ./heads/clustering.h ./heads/utils.h ./heads/solution.h ./heads/inputdata.h
+HEADER	= $(HEADS)/block.h $(HEADS)/clustering.h $(HEADS)/utils.h $(HEADS)/solution.h $(HEADS)/inputdata.h
 OUT	= a.out
 
 
-all: $(OBJS).cc
+all: $(OBJS)
 	$(CPP) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
-main.o: main.cc
-	$(CPP) $(CFLAGS) main.cc -std=c11
+$(SRCS)/main.o: $(SRCS)/main.cc
+	$(CPP) $(CFLAGS) $(SRCS)/main.cc -std=c11
 
-block.o: block.cc
-	$(CPP) $(CFLAGS) block.cc -std=c11
+$(SRCS)/block.o: $(SRCS)/block.cc
+	$(CPP) $(CFLAGS) $(SRCS)/block.cc -std=c11
 
-clustering.o: clustering.cc
-	$(CPP) $(CFLAGS) clustering.cc -std=c11
+$(SRCS)/clustering.o: $(SRCS)/clustering.cc
+	$(CPP) $(CFLAGS) $(SRCS)/clustering.cc -std=c11
 
-utils.o: utils.cc
-	$(CPP) $(CFLAGS) utils.cc -std=c11
+$(SRCS)/utils.o: $(SRCS)/utils.cc
+	$(CPP) $(CFLAGS) $(SRCS)/utils.cc -std=c11
 
-solution.o: solution.cc
-	$(CPP) $(CFLAGS) solution.cc -std=c11
+$(SRCS)/solution.o: $(SRCS)/solution.cc
+	$(CPP) $(CFLAGS) $(SRCS)/solution.cc -std=c11
 
-inputdata.o: inputdata.cc
-	$(CPP) $(CFLAGS) inputdata.cc -std=c11
+$(SRCS)/inputdata.o: $(SRCS)/inputdata.cc
+	$(CPP) $(CFLAGS) $(SRCS)/inputdata.cc -std=c11
 
 clean:
 	rm -f $(OBJS) $(OUT)
