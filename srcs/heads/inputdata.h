@@ -7,7 +7,7 @@ namespace inputdata
 
     extern int max_uavs_avail;
     extern int nbr_grnds;
-    extern int dim=2;			// dimension of input vectors
+    extern int dim;			// dimension of input vectors
     extern double** grnds;		// All ground nodes coordinates
     extern double uavs_range;	// all ranges of available uavs
 

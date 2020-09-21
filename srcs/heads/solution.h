@@ -10,6 +10,8 @@
 #include <glpk.h>
 #include <map>
 
+using namespace std;
+
 class Solution{
 
 	vector<double*> uavs_;// coordinates of uavs (vector of pointers to arrays)

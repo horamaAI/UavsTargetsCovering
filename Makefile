@@ -21,22 +21,22 @@ all: $(OBJS)
 	$(CPP) -g $(OBJS) -o $(OUT) $(LFLAGS)
 
 $(SRCS)/main.o: $(SRCS)/main.cc
-	$(CPP) $(CFLAGS) $(SRCS)/main.cc -std=c11
+	$(CPP) $(CFLAGS) $(SRCS)/main.cc -std=c++11
 
 $(SRCS)/block.o: $(SRCS)/block.cc
-	$(CPP) $(CFLAGS) $(SRCS)/block.cc -std=c11
+	$(CPP) $(CFLAGS) $(SRCS)/block.cc -std=c++11
 
 $(SRCS)/clustering.o: $(SRCS)/clustering.cc
-	$(CPP) $(CFLAGS) $(SRCS)/clustering.cc -std=c11
+	$(CPP) $(CFLAGS) $(SRCS)/clustering.cc -std=c++11
 
 $(SRCS)/utils.o: $(SRCS)/utils.cc
-	$(CPP) $(CFLAGS) $(SRCS)/utils.cc -std=c11
+	$(CPP) $(CFLAGS) $(SRCS)/utils.cc -std=c++11
 
 $(SRCS)/solution.o: $(SRCS)/solution.cc
-	$(CPP) $(CFLAGS) $(SRCS)/solution.cc -std=c11
+	$(CPP) $(CFLAGS) $(SRCS)/solution.cc -std=c++11
 
 $(SRCS)/inputdata.o: $(SRCS)/inputdata.cc
-	$(CPP) $(CFLAGS) $(SRCS)/inputdata.cc -std=c11
+	$(CPP) $(CFLAGS) $(SRCS)/inputdata.cc -std=c++11
 
 clean:
 	rm -f $(OBJS) $(OUT)
