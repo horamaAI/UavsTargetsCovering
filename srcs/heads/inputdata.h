@@ -1,6 +1,12 @@
 #ifndef UAVSCOVS_HEADS_INPUTDATA_H_
 #define UAVSCOVS_HEADS_INPUTDATA_H_
 
+#include <stdio.h>
+#include <vector>
+#include <igraph.h>
+#include <glpk.h>
+#include <map>
+
 
 namespace inputdata
 {
