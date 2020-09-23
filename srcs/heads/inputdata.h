@@ -23,4 +23,6 @@ namespace inputdata
 
 }
 
+void readData(char** argv);
+
 #endif // UAVSCOVS_HEADS_INPUTDATA_H_

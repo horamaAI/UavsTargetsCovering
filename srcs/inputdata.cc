@@ -24,8 +24,6 @@ namespace inputdata {
 
 };
 
-using namespace inputdata;
-
 
 void readData(char** argv)
 {
@@ -35,10 +33,10 @@ void readData(char** argv)
 	fp=fopen(argv[1],"r");
 
 	// read number of available uavs
-	if( fscanf(fp,"%d", &max_uavs_avail) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
+	if( fscanf(fp,"%d", &inputdata::max_uavs_avail) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
 
 	// read range of uavs
-	if( fscanf(fp,"%lf", &uavs_range) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
+	if( fscanf(fp,"%lf", &inputdata::uavs_range) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
 
 	int i=0, j=0;
 /*
@@ -48,23 +46,23 @@ void readData(char** argv)
 */
 
 	// read number of ground nodes and their coordinates
-	if( fscanf(fp,"%d", &nbr_grnds) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
+	if( fscanf(fp,"%d", &inputdata::nbr_grnds) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
 
 	// read limits of map
-	if( fscanf(fp,"%lf,%lf", &bound_1,&bound_2) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
+	if( fscanf(fp,"%lf,%lf", &inputdata::bound_1, &inputdata::bound_2) < 0 ){STREAM_FAIL(__FILE__, __LINE__, __FUNCTION__);}
 
 	// allocate memory for ground nodes
-	grnds=(double**)malloc(nbr_grnds*sizeof(double*));
-	if(grnds==NULL){ /* memory allocation failure */ MEMO_FAIL(__FILE__, __LINE__, __FUNCTION__); }
+	inputdata::grnds=(double**)malloc(inputdata::nbr_grnds*sizeof(double*));
+	if(inputdata::grnds==NULL){ /* memory allocation failure */ MEMO_FAIL(__FILE__, __LINE__, __FUNCTION__); }
 
-	for(i=0;i<nbr_grnds;i++)
+	for(i=0;i<inputdata::nbr_grnds;i++)
 	{
-		grnds[i]=(double*)calloc(dim,sizeof(double));// Unique, defines a point : for either a ground node or a uav
-		for (j=0;j<dim;j++)
+		inputdata::grnds[i]=(double*)calloc(inputdata::dim,sizeof(double));// Unique, defines a point : for either a ground node or a uav
+		for (j=0;j<inputdata::dim;j++)
 		{
 			// skip comma missing for last dim
-			if(j==dim-1)	fscanf(fp,"%lf", &grnds[i][j]);
-			else fscanf(fp,"%lf,", &grnds[i][j]);
+			if(j==inputdata::dim-1)	fscanf(fp,"%lf", &inputdata::grnds[i][j]);
+			else fscanf(fp,"%lf,", &inputdata::grnds[i][j]);
 		}
 	}
 
