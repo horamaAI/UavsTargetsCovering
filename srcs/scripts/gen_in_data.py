@@ -20,4 +20,5 @@ f.write(str(xinf)+","+str(yinf)+"\n")
 
 for point in alldata :
 	f.write(str(point[0])+","+str(point[1])+"\n")
+
 f.close()

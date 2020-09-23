@@ -1,6 +1,7 @@
 # Collect data
 drones_coords=[]
 aFile="ref_pbrlm.csv"
+
 with open(aFile) as f:
 	lines=f.readlines()
 	i=0
@@ -20,6 +21,7 @@ from scipy.spatial import ConvexHull, convex_hull_plot_2d
 hull = ConvexHull(points)
 
 import csv
+
 with open('convHullcoords.csv', "w") as f:
 	for ele in hull.vertices :
 		f.write(str(drones_coords[ele][0])+","+str(drones_coords[ele][1])+"\n")
