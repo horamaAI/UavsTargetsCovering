@@ -1,8 +1,10 @@
 #include "heads/solution.h"
 
+/*
 Solution::Solution(){
 	printf("Empty args cnstrctor");
 }
+*/
 
 void Solution::addTonetwork(double *toadd, double range)
 {// updates the matrix of distances to avoid constantly having to compute them
@@ -122,8 +124,8 @@ long int zz=igraph_vcount(Gk);
 cerr<< "use ("<< this->uavs_[n1][0] << "," << this->uavs_[n1][1]<< ") and ("<< this->uavs_[n2][0] << ","
 			<< this->uavs_[n2][1]<<")"<<endl;
 			// assign coordinates of new created node : middle of segment [n1,n2]
-			double* buffdouble=new double[dim];
-			for (j=0;j<dim;j++)
+			double* buffdouble=new double[inputdata::dim];
+			for (j=0; j<inputdata::dim; j++)
 				buffdouble[j]=(this->uavs_[n1][j]+this->uavs_[n2][j])/2;
 			this->addTonetwork(buffdouble, range);// update distance of network of uavs
 
@@ -221,8 +223,8 @@ cout<<"Duplicate uav for node "<<grndi<<endl;
 		randindex=rand()%this->gcovs_[grndi].size();
 		uavj=this->gcovs_[grndi][randindex];
 cout<<"Selected "<<this->uavs_[uavj][0]<<","<<this->uavs_[uavj][1]<<endl;
-		buff=new double[dim];
-		for(j=0;j<dim;j++)
+		buff=new double[inputdata::dim];
+		for(j=0; j<inputdata::dim; j++)
 			buff[j]=this->uavs_[uavj][j];
 		this->addTonetwork(buff, range);// update distance of network of uavs, does also call to 'find_covers'
 	/* Keep duplicating until constraint on lb is satisfied */
@@ -243,10 +245,10 @@ void Solution::find_covers(int uavj, double range)
 
 	int i=0,j=0;
 		
-	for(i=0;i<nbr_grnds;i++)
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{
 //		if( euclDistance(this->uavs_[uavj],grnds[i]) <= range && !uav_in_cover(this->gcovs_[i], uavj))
-		if( euclDistance(this->uavs_[uavj],grnds[i]) <= range )
+		if( euclDistance(this->uavs_[uavj], inputdata::grnds[i]) <= range )
 		{
 if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << this->uavs_[uavj][1] << endl;
 			this->gcovs_[i].push_back(uavj);
@@ -277,10 +279,10 @@ void Solution::populate(vector<int>* uavsconnectivity, double range, igraph_t* s
 
 
 	// start building graph
-	if(igraph_empty(solnG0, covers->uavs_.size(), IGRAPH_UNDIRECTED)==IGRAPH_EINVAL)
+	if(igraph_empty(solnG0, this->uavs_.size(), IGRAPH_UNDIRECTED)==IGRAPH_EINVAL)
 		printf(" Invalid number of vertices, graph init failed %s, %d, %s \n", __FILE__, __LINE__, __FUNCTION__);
 
-printf("G0 with %d active uavs\n", covers->uavs_.size());
+printf("G0 with %d active uavs\n", this->uavs_.size());
 	// add edges to graph : two uavs in each other range
 /*
 int count=0;
@@ -288,23 +290,23 @@ int count=0;
 		cout << it->first << " --- " << it->second << endl;
 */
 int count=0;
-	for(i=0;i<covers->uavs_.size();i++)
+	for(i=0;i<this->uavs_.size();i++)
 	{
-		for(j=0;j<covers->outdeg_[i].size();j++)
+		for(j=0;j<this->outdeg_[i].size();j++)
 		{// for each uav, if connected to another one, then create link in graph
 			count++;
-			igraph_add_edge(solnG0, i, covers->outdeg_[i][j]);// since j = i+1 to nActivUAVs, then no loop
+			igraph_add_edge(solnG0, i, this->outdeg_[i][j]);// since j = i+1 to nActivUAVs, then no loop
 		}
 	}
 
 printf("\nend 1st graph and count %d\n",count);
 printf("Before connectCCs vcount %li ecount %li and n_uavs %d\n", (long int)igraph_vcount(solnG0), (long int)igraph_ecount(solnG0),
-	covers->uavs_.size());
+	this->uavs_.size());
 
-	connect_CCs(covers, solnG0, range, uavsconnectivity, pairs, false);
+	this->connect_CCs(solnG0, range, uavsconnectivity, pairs, false);
 
 printf("Test npairs == %d and should be one connected component (passed connectCCs function)\n", pairs->size(),
-	covers->uavs_.size());
+	this->uavs_.size());
 
 	// Now that more variables are assigned => launch true populating phase
 	// solnsGraphs=(igraph_t**)malloc((*npairs)*sizeof(igraph_t*));
@@ -312,7 +314,7 @@ printf("Test npairs == %d and should be one connected component (passed connectC
 	igraph_vector_t edges;
 	int nfirst=0;
 	long int ind1,ind2;// needed for the cast
-	sln* buffnets;
+	Solution* buffnets;
 	char path[30];
 	char buff[30];
 	FILE *fout;
@@ -327,8 +329,8 @@ printf("Test npairs == %d and should be one connected component (passed connectC
 		{
 			ind1=VECTOR(edges)[i];
 			ind2=VECTOR(edges)[i+1];
-			fprintf(fout,"%lf,%lf\n", covers->uavs_[ind1][0], covers->uavs_[ind1][1]);
-			fprintf(fout,"%lf,%lf\n", covers->uavs_[ind2][0], covers->uavs_[ind2][1]);
+			fprintf(fout,"%lf,%lf\n", this->uavs_[ind1][0], this->uavs_[ind1][1]);
+			fprintf(fout,"%lf,%lf\n", this->uavs_[ind2][0], this->uavs_[ind2][1]);
 			fprintf(fout,"\n");
 //	printf("(%ld,%ld)\t", ind1, ind2);
 //fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
@@ -340,12 +342,12 @@ printf("Test npairs == %d and should be one connected component (passed connectC
 		
 		strcat(path,"_coords");
 		fout=fopen(path,"w");
-		for(i=0;i<covers->uavs_.size();i++)
-			for (j=0;j<dim;j++)
+		for(i=0; i<this->uavs_.size(); i++)
+			for (j=0; j<inputdata::dim; j++)
 			{
 				// skip comma not needed after last dim value
-				if(j==dim-1)	fprintf(fout,"%lf\n", covers->uavs_[i][j]);
-				else fprintf(fout,"%lf,", covers->uavs_[i][j]);
+				if(j==inputdata::dim-1)	fprintf(fout,"%lf\n", this->uavs_[i][j]);
+				else fprintf(fout,"%lf,", this->uavs_[i][j]);
 			}
 		fclose(fout);
 
@@ -598,7 +600,7 @@ map<int,double>* Solution::solve_linear_model(double range, double lb)
 //	bool changedstate=false;
 	/* Find at least one uav that needs to be replicated so that a minimum cover constraint isn't violated : at least
 		lb covers for each target */
-	for(i=0;i<nbr_grnds;i++)
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{
 //		/* Create duplicate if constraint not satisfied => select randomly uavs covering i to duplicate, and update covers */
 		if( this->gcovs_[i].size() < lb )
@@ -608,7 +610,7 @@ for(int z=0;z<this->uavs_.size();z++){
 //int buffz=net->gcovs_[i][z];
 cout<<this->uavs_[z][0]<<","<<this->uavs_[z][1]<<endl;
 }
-			this->duplicate(lb, i, range);
+			this->duplicate_uavs(lb, i, range);
 //			if(!changedstate)	changedstate=true;
 //			break;
 		}
@@ -623,23 +625,23 @@ TO ERASE : Done in addTonetwork
 	}
 */
 
-printf("Begin building linear problem with %d ground nodes, and %d uavs\n", nbr_grnds, this->uavs_.size());
+printf("Begin building linear problem with %d ground nodes, and %d uavs\n", inputdata::nbr_grnds, this->uavs_.size());
 	/* Build linear problem */
 	glp_prob *lp;
-	int ia[1+(nbr_grnds*this->uavs_.size())],ja[1+(nbr_grnds*this->uavs_.size())];
-	double ar[1+(nbr_grnds*this->uavs_.size())], z=0.;
+	int ia[1+(inputdata::nbr_grnds*this->uavs_.size())],ja[1+(inputdata::nbr_grnds*this->uavs_.size())];
+	double ar[1+(inputdata::nbr_grnds*this->uavs_.size())], z=0.;
 	
 	lp = glp_create_prob();
 	glp_set_prob_name(lp, "set cover");
 	glp_set_obj_dir(lp, GLP_MIN);
 
 	/* for row names */
-	char row_names[nbr_grnds+1][20];
+	char row_names[inputdata::nbr_grnds+1][20];
 	char col_names[this->uavs_.size()+1][20];
 	char buff[20];
 
-	glp_add_rows(lp, nbr_grnds);
-	for(i=0;i<nbr_grnds;i++)
+	glp_add_rows(lp, inputdata::nbr_grnds);
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{
 		sprintf(buff,"r%d",i+1);
 		strcpy(row_names[i+1],buff);
@@ -662,18 +664,18 @@ printf("Begin building linear problem with %d ground nodes, and %d uavs\n", nbr_
 
 printf("RANGE %f, lb %f\n",range,lb);
 	int counter=1;
-	for(i=0;i<nbr_grnds;i++)
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{
 		for(j=0;j<this->uavs_.size();j++)
 		{
 			ia[counter] = i+1;
 			ja[counter] = j+1;
-			ar[counter] = ( euclDistance(this->uavs_[j],grnds[i]) <= range ? 1.0 : 0.0 );
+			ar[counter] = ( euclDistance(this->uavs_[j], inputdata::grnds[i]) <= range ? 1.0 : 0.0 );
 			counter++;
 		}
 	}
 
-	glp_load_matrix(lp, nbr_grnds*this->uavs_.size(), ia, ja, ar);
+	glp_load_matrix(lp, inputdata::nbr_grnds*this->uavs_.size(), ia, ja, ar);
 
 /*
 	int ind[net->uavs_.size()+1];
@@ -709,9 +711,9 @@ printf("RANGE %f, lb %f\n",range,lb);
 	map<int,double> *soln=new map<int,double>;
 	// Needed for stats on covers (constraints, rows)
 	double sumrows=0, maxrowval=0, minrowval=this->uavs_.size(), tmp=0, lessThanAvrg=0, moreThanvrg=0;
-	double* covRes=(double*)calloc(nbr_grnds+1,sizeof(double));
+	double* covRes=(double*)calloc(inputdata::nbr_grnds+1,sizeof(double));
 
-	for(i=0;i<nbr_grnds;i++)
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{// for statistics on the values returned by the rows
 //		tmp=glp_get_row_prim(lp, i);
 		tmp=glp_mip_row_val(lp, i+1);
@@ -741,7 +743,7 @@ printf("RANGE %f, lb %f\n",range,lb);
 		printf("[ %d : %f ] ", it->first, it->second);
 	
 	printf("\nRO == %f, max = %f, min = %f, aver = %f, lessThanAvrg = %f, moreThanvrg = %f\n",sumrows, maxrowval,
-		minrowval, sumrows/nbr_grnds, lessThanAvrg, moreThanvrg);
+		minrowval, sumrows/inputdata::nbr_grnds, lessThanAvrg, moreThanvrg);
 	for(i=0;i<=(int)maxrowval;i++)	if (covRes[i]>0) printf("cov[%d]=%f\t",i,covRes[i]);
 	printf("\n");
 	int activeuavs=0;
@@ -750,11 +752,11 @@ printf("RANGE %f, lb %f\n",range,lb);
 	fp=fopen("activeuavs.csv","w");
 	for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
 	{
-		for (j=0;j<dim;j++)
+		for (j=0; j<inputdata::dim; j++)
 		{
 			// skip comma not needed after last dim value
 			fprintf(fp,"%lf", this->uavs_[it->first][j]);
-			if(j==dim-1)	fprintf(fp,"\n");
+			if(j==inputdata::dim-1)	fprintf(fp,"\n");
 			else	fprintf(fp,",");
 		}
 	}
@@ -762,17 +764,17 @@ printf("RANGE %f, lb %f\n",range,lb);
 
 	// print in file connections uavs-ground nodes
 	fp=fopen("uavs_grounds.csv","w");
-	int activecovers[nbr_grnds];
-	for(i=0;i<nbr_grnds;i++)
+	int activecovers[inputdata::nbr_grnds];
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{
 		activecovers[i]=0;
 		for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
 		{
 			int uavk=it->first;
-			if( euclDistance(this->uavs_[uavk],grnds[i]) <= range )
+			if( euclDistance(this->uavs_[uavk], inputdata::grnds[i]) <= range )
 			{
 				assert(uav_in_cover(this->gcovs_[i], uavk));// security safety, otherwise would be a problem
-				fprintf(fp,"%lf,%lf\n", grnds[i][0], grnds[i][1]);
+				fprintf(fp,"%lf,%lf\n", inputdata::grnds[i][0], inputdata::grnds[i][1]);
 				fprintf(fp,"%lf,%lf\n\n", this->uavs_[uavk][0], this->uavs_[uavk][1]);
 				activecovers[i]++;
 			}
@@ -783,13 +785,13 @@ printf("RANGE %f, lb %f\n",range,lb);
 	int max=0;
 	double sum=0;
 	printf("Couples (ground, n active uavs covering it) : ");
-	for(i=0;i<nbr_grnds;i++)
+	for(i=0; i<inputdata::nbr_grnds; i++)
 	{
 		printf(" (%d, %d) ",i,activecovers[i]);
 		sum+=activecovers[i];
 		if(activecovers[i] > activecovers[max])	max=i;
 	}
-	printf("\nAverage : %f\n",sum/nbr_grnds);
+	printf("\nAverage : %f\n",sum/inputdata::nbr_grnds);
 	printf(" Max degree : %d with %d\n",max,activecovers[max]);
 	
 	// housekeeping

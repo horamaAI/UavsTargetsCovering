@@ -1,6 +1,9 @@
 #ifndef UAVSCOVS_HEADS_UTILS_H_
 #define UAVSCOVS_HEADS_UTILS_H_
 
+#include <cmath>
+
+#include "inputdata.h"
 
 void readData(char** argv);
 double euclDistance(double *node1, double *node2);
