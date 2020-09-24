@@ -7,10 +7,10 @@ double k_means(double** data, int ngrounds, vector<double*>* clusts, double erro
 
     double old_error, error = DBL_MAX; // DBL_MAX : macro defines maximum finite floating-point value : 1E+37
 	int ninres[clusts->size()]={};// gives the n elements in each cluster
-	int gcovs[nbr_grnds];
+	int gcovs[inputdata::nbr_grnds];
 	vector<double*> cl(clusts->size());// temporary centroids
-	for(h=0;h<clusts->size();h++)
-		cl[h]=new double[dim];
+	for(h=0; h<clusts->size(); h++)
+		cl[h]=new double[inputdata::dim];
 
     assert(data && clusts->size() > 0 && error_tolerance >= 0); /* for debugging */
 
@@ -25,10 +25,10 @@ double k_means(double** data, int ngrounds, vector<double*>* clusts, double erro
         error = 0;
 
         // clear old counts and temp centroids
-        for (i=0; i <clusts->size(); i++)
+        for (i=0; i<clusts->size(); i++)
         {
 			// reinit temp centroids
-            for (j=0;j<dim; cl[i][j++] = 0){};
+            for (j=0; j<inputdata::dim; cl[i][j++] = 0){};
 			ninres[i]=0;
         }
 
@@ -41,7 +41,7 @@ double k_means(double** data, int ngrounds, vector<double*>* clusts, double erro
             {
 				distance=0;
 				// considered measure : squared residuals
-                for(j=0;j<dim;j++)	distance+=pow(data[h][j]-(*clusts)[i][j],2);
+                for(j=0; j<inputdata::dim; j++)	distance+=pow(data[h][j]-(*clusts)[i][j],2);
                 if (distance < min_distance)
                 {
 					min_distance=distance;// find the closest cluster
@@ -49,7 +49,7 @@ double k_means(double** data, int ngrounds, vector<double*>* clusts, double erro
                 }
             }
 			// update temp centroid of destination cluster
-			for(j=0;j<dim;j++)	cl[gcovs[h]][j] += data[h][j];
+			for(j=0; j<inputdata::dim; j++)	cl[gcovs[h]][j] += data[h][j];
 			ninres[gcovs[h]]++;
             /* update standard error */
             error += min_distance;
@@ -57,13 +57,14 @@ double k_means(double** data, int ngrounds, vector<double*>* clusts, double erro
 
 		// update centroids
         for (i=0; i<clusts->size(); i++)
-            for (j=0; j<dim; j++)
+            for (j=0; j<inputdata::dim; j++)
                 (*clusts)[i][j] = ninres[i] ? cl[i][j]/ninres[i] : cl[i][j];
 
-    } while (fabs(error - old_error) > error_tolerance);/* if for each iteration, the number of changes made are not different from previous */
+    } while (fabs(error - old_error) > error_tolerance);/* if for each iteration, the number of changes made are not
+														 different from previous */
 
 	// housekeeping
-	for(h=0;h<clusts->size();h++)
+	for(h=0; h<clusts->size(); h++)
 	{
 		delete[] cl[h];
 		cl[h]=nullptr;
@@ -86,15 +87,15 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 
 	// Init first cluster with first element
 	ninres.push_back(1);
-	res->push_back(new double[dim]);
-	for(k=0;k<dim;k++)
+	res->push_back(new double[inputdata::dim]);
+	for(k=0; k<inputdata::dim; k++)
 		(*res)[0][k]=input_data[0][k];
 
-	cl.push_back(new double[dim]);// same with temporary value
-	for(k=0;k<dim;k++)
+	cl.push_back(new double[inputdata::dim]);// same with temporary value
+	for(k=0; k<inputdata::dim; k++)
 		cl[0][k]=input_data[0][k];
 
-	double largestdist=sqrt(pow(bound_1,2)+pow(bound_2,2));// Largest distance : extrem limits of the map
+	double largestdist=sqrt(pow(inputdata::bound_1,2)+pow(inputdata::bound_2,2));// Largest distance : extrem limits of the map
 	double distance_to_closest_centroid=largestdist;
 	double current_distance=0;
 
@@ -116,7 +117,7 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 		{// closest centroid is within admissible range => add element to cluster
 			ninres[gcovs[k]]++;
 			//update centroids
-			for(j=0;j<dim;j++)
+			for(j=0; j<inputdata::dim; j++)
 			{
 				cl[gcovs[k]][j]+=input_data[k][j];
 				(*res)[gcovs[k]][j]=cl[gcovs[k]][j]/ninres[gcovs[k]];
@@ -126,9 +127,9 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 		{// closest centroid not within admissible range => Create new cluster
 			gcovs[k]=res->size();
 			ninres.push_back(1);
-			res->push_back(new double[dim]);
-			cl.push_back(new double[dim]);
-			for(j=0;j<dim;j++){
+			res->push_back(new double[inputdata::dim]);
+			cl.push_back(new double[inputdata::dim]);
+			for(j=0; j<inputdata::dim; j++){
 				(*res)[res->size()-1][j]=input_data[k][j];
 				cl[res->size()-1][j]=input_data[k][j];
 			}
@@ -146,9 +147,9 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 };
 
 
-vector<double*>* elbow(){
+void elbow(vector<double*>* res){
 
-	vector<double*>* res;// true result + 1
+	//vector<double*>* res;// true result + 1
 	vector<double*>* res_plus_1;// true result + 1
 	vector<double*>* res_plus_2;// true result + 2 and current result
 	vector<double*>* del;// pointer to result to be freed
@@ -163,13 +164,13 @@ vector<double*>* elbow(){
 
 	bool stop=false;
 
-printf("nbr grnds : %d\n",nbr_grnds);
+printf("nbr grnds : %d\n", inputdata::nbr_grnds);
 
 	do{
 		
 		// do until elbow criteria satisfied:
-		res_plus_2=onepassmethod(grnds, nbr_grnds, range/i);
-		wss=k_means(grnds, nbr_grnds, res_plus_2, 0.0001, range/i);
+		res_plus_2=onepassmethod(inputdata::grnds, inputdata::nbr_grnds, inputdata::uavs_range/i);
+		wss=k_means(inputdata::grnds, inputdata::nbr_grnds, res_plus_2, 0.0001, inputdata::uavs_range/i);
 printf("i %d, wss. %f, n_uavs %d\n", i, wss, res_plus_2->size());
 		i++;
 		if(i<=3)

@@ -29,7 +29,8 @@ int main(int argc, char** argv)
 
 	//translate(res, radius);
 
-	vector<double*>* res = elbow();
+	vector<double*>* res;
+	elbow(res);
 
 /*
 	i--;// out print where it stopped

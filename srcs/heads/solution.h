@@ -35,7 +35,7 @@ class Solution{
         bool uav_in_cover(vector<int> &gcovs, int uavindex);
         void updateDistMat(double range);
 
-}
+};
 
 
 #endif // UAVSCOVS_HEADS_SOLUTION_H_
