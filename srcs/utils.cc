@@ -1,11 +1,11 @@
 
-#include "utils.h"
+#include "heads/utils.h"
 
 double euclDistance(double *node1, double *node2)
 {
 	int i=0;
 	double norm=0;
-	for(i=0;i<dim;i++)	norm+=pow(node1[i]-node2[i],2);
+	for(i=0; i<inputdata::dim; i++)	norm+=pow(node1[i]-node2[i],2);
     return sqrt(norm);
 };
 

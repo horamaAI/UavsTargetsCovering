@@ -2,17 +2,11 @@
 
 //#include "linear_solver.hpp"
 //#include <stdlib>
-#include <iostream>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <string>
-#include <cmath>
 
-#include <assert.h>
-#include <float.h>
 #include <tuple>
-#include <stack>
 
 #include "heads/clustering.h"
 
@@ -31,16 +25,18 @@ int main(int argc, char** argv)
 	readData(argv);
 
 //	double radius=(uavs_range/2);
-	double range=uavs_range;
+	double range=inputdata::uavs_range;
 
 	//translate(res, radius);
 
-	vector<double*>* res = elbow();
+	vector<double*>* res;
+	elbow(res);
 
+printf("In main res size : %d\n", res->size());
 /*
 	i--;// out print where it stopped
 	printf("\nFinal series %d, wss : %f, res uavs %d\n\n", i, wss, res->uavs_.size());
-
+*/
 /*
 	FILE* fp;
 	fp=fopen("resTrue.csv","w");
@@ -55,13 +51,15 @@ int main(int argc, char** argv)
 */
 
 	Solution* rawsln=new Solution();// create first raw solution
-	rawsln->gcovs_=new vector<int>[nbr_grnds];
+	rawsln->gcovs_=new vector<int>[inputdata::nbr_grnds];
+
+	int i=0, j=0;
 	
 	double* buffdouble;
-	for(i=0;i<res->size();i++){
-		buffdouble=new double[dim];
-		for(j=0;j<dim;j++)	buffdouble[j]=(*res)[i][j];
-		addTonetwork(rawsln, buffdouble, range);
+	for(i=0; i<res->size(); i++){
+		buffdouble=new double[inputdata::dim];
+		for(j=0; j<inputdata::dim; j++)	buffdouble[j]=(*res)[i][j];
+		rawsln->addTonetwork(buffdouble, range);
 	}
 
 	// housekeeping
@@ -77,18 +75,18 @@ int main(int argc, char** argv)
 
 
 	// linear solver : return indices of uavs active for coverage, and the results of their linear program values
-	map<int,double>* uavscoverage=solve_linear_model(rawsln, range, lb);
+	map<int,double>* uavscoverage=rawsln->solve_linear_model(range, lb);
 
 	// copy solution into new and cleaner one, and at the same time store in file the coordinates of active uavs for coverage
-	sln* net=new sln;
-	net->gcovs_=new vector<int>[nbr_grnds];
+	Solution* net = new Solution();
+	net->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 //	FILE* fp;
 //	fp=fopen("finalres.csv","w");
 	for(map<int,double>::iterator it=(*uavscoverage).begin(); it!=(*uavscoverage).end(); it++)
 	{
-		buffdouble=new double[dim];
-		for (j=0;j<dim;j++)
+		buffdouble=new double[inputdata::dim];
+		for (j=0; j<inputdata::dim; j++)
 		{
 			// skip comma not needed after last dim value
 //			if(j==dim-1)	fprintf(fp,"%lf\n", rawsln->uavs_[it->first][j]);
