@@ -1,8 +1,10 @@
 #include "heads/solution.h"
 
+/*
 Solution::Solution(){
 	printf("Empty args cnstrctor");
 }
+*/
 
 void Solution::addTonetwork(double *toadd, double range)
 {// updates the matrix of distances to avoid constantly having to compute them

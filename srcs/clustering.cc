@@ -147,9 +147,9 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 };
 
 
-void elbow(vector<double*>* res){
+void elbow(vector<double*>* finalres){
 
-	//vector<double*>* res;// true result + 1
+	vector<double*>* res;// true result (buffer)
 	vector<double*>* res_plus_1;// true result + 1
 	vector<double*>* res_plus_2;// true result + 2 and current result
 	vector<double*>* del;// pointer to result to be freed
@@ -226,7 +226,9 @@ printf("Stopping condition holds : wss_minus_1-wss > elbow_ratio*prev_deviation 
 			delete del;//Housekeeping
 			del=nullptr;
 		}
+
 	}while(!stop && wss>0);/// !!!!!!!!!!!!!!!!!!!!! CAREFUL!!! CHECK STOPPING CONDITION (wss>0???)
 //	}while(i<1);
+printf("Res result size : %d\n", res->size());
 
 }

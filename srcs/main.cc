@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 	vector<double*>* res;
 	elbow(res);
 
+printf("In main res size : %d\n", res->size());
 /*
 	i--;// out print where it stopped
 	printf("\nFinal series %d, wss : %f, res uavs %d\n\n", i, wss, res->uavs_.size());

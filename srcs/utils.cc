@@ -1,5 +1,5 @@
 
-#include "utils.h"
+#include "heads/utils.h"
 
 double euclDistance(double *node1, double *node2)
 {
