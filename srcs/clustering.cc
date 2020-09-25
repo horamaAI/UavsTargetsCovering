@@ -147,7 +147,7 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 };
 
 
-void elbow(vector<double*>* finalres){
+vector<double*>* elbow(){
 
 	vector<double*>* res;// true result (buffer)
 	vector<double*>* res_plus_1;// true result + 1
@@ -231,4 +231,5 @@ printf("Stopping condition holds : wss_minus_1-wss > elbow_ratio*prev_deviation 
 //	}while(i<1);
 printf("Res result size : %d\n", res->size());
 
+	return res;
 }
