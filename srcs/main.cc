@@ -29,8 +29,7 @@ int main(int argc, char** argv)
 
 	//translate(res, radius);
 
-	vector<double*>* res;
-	elbow(res);
+	vector<double*>* res = elbow();
 
 printf("In main res size : %d\n", res->size());
 /*

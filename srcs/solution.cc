@@ -320,36 +320,38 @@ printf("Test npairs == %d and should be one connected component (passed connectC
 	FILE *fout;
 
 	// On each iteration, record all data on files to save space
-		strcpy(path,"./out/G_0");
-		fout=fopen(path,"w");
-		igraph_vector_init(&edges, 0);
-		igraph_get_edgelist(solnG0, &edges, 0);
-		nfirst=igraph_ecount(solnG0);
-		for (i=0, j=0; j<nfirst; i+=2, j++)
-		{
-			ind1=VECTOR(edges)[i];
-			ind2=VECTOR(edges)[i+1];
-			fprintf(fout,"%lf,%lf\n", this->uavs_[ind1][0], this->uavs_[ind1][1]);
-			fprintf(fout,"%lf,%lf\n", this->uavs_[ind2][0], this->uavs_[ind2][1]);
-			fprintf(fout,"\n");
+	strcpy(path,"./out/G_0");
+	fout=fopen(path,"w");
+	if(fout==NULL)
+		printf("DANGER ZONNNNNNEEEEEE!!!!\n");
+	igraph_vector_init(&edges, 0);
+	igraph_get_edgelist(solnG0, &edges, 0);
+	nfirst=igraph_ecount(solnG0);
+	for (i=0, j=0; j<nfirst; i+=2, j++)
+	{
+		ind1=VECTOR(edges)[i];
+		ind2=VECTOR(edges)[i+1];
+		fprintf(fout,"%lf,%lf\n", this->uavs_[ind1][0], this->uavs_[ind1][1]);
+		fprintf(fout,"%lf,%lf\n", this->uavs_[ind2][0], this->uavs_[ind2][1]);
+		fprintf(fout,"\n");
 //	printf("(%ld,%ld)\t", ind1, ind2);
 //fprintf(bufffp,"%ld-%ld:%lf,%lf:%lf,%lf:W:%lf\n", buff1, buff2, net->uavs_[buff1][0], net->uavs_[buff1][1],
 //		net->uavs_[buff2][0], net->uavs_[buff2][1],weight);
-		}
+	}
 //	printf("\n");
-		fclose(fout);
-		igraph_vector_destroy(&edges);
-		
-		strcat(path,"_coords");
-		fout=fopen(path,"w");
-		for(i=0; i<this->uavs_.size(); i++)
-			for (j=0; j<inputdata::dim; j++)
-			{
-				// skip comma not needed after last dim value
-				if(j==inputdata::dim-1)	fprintf(fout,"%lf\n", this->uavs_[i][j]);
-				else fprintf(fout,"%lf,", this->uavs_[i][j]);
-			}
-		fclose(fout);
+	fclose(fout);
+	igraph_vector_destroy(&edges);
+	
+	strcat(path,"_coords");
+	fout=fopen(path,"w");
+	for(i=0; i<this->uavs_.size(); i++)
+		for (j=0; j<inputdata::dim; j++)
+		{
+			// skip comma not needed after last dim value
+			if(j==inputdata::dim-1)	fprintf(fout,"%lf\n", this->uavs_[i][j]);
+			else fprintf(fout,"%lf,", this->uavs_[i][j]);
+		}
+	fclose(fout);
 
 // ________________________________________________________________
 /* uncomment here for populating steps
