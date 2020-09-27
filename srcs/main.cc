@@ -7,6 +7,7 @@
 #include <ctime>
 
 #include <tuple>
+#include <memory>
 
 #include "heads/clustering.h"
 
@@ -49,7 +50,7 @@ printf("In main res size : %lu\n", res->size());
 	fclose(fp);
 */
 
-	Solution* rawsln=new Solution();// create first raw solution
+	unique_ptr<Solution> rawsln(new Solution());// create first raw solution
 	rawsln->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 	double* buffdouble;
@@ -95,7 +96,7 @@ printf("In main res size : %lu\n", res->size());
 	}
 //	fclose(fp);
 	
-	delete rawsln;
+//	delete rawsln;
 	rawsln=nullptr;
 
 	stack<tuple<int,int>>* pairs=new stack<tuple<int,int>>;// used for restrictions
