@@ -76,7 +76,7 @@ printf("In main res size : %lu\n", res->size());
 	map<int,double>* uavscoverage=rawsln->solve_linear_model(range, lb);
 
 	// copy solution into new and cleaner one, and at the same time store in file the coordinates of active uavs for coverage
-	Solution* net = new Solution();
+	unique_ptr<Solution> net(new Solution());
 	net->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 //	FILE* fp;
@@ -99,7 +99,7 @@ printf("In main res size : %lu\n", res->size());
 //	delete rawsln;
 	rawsln=nullptr;
 
-	stack<tuple<int,int>>* pairs=new stack<tuple<int,int>>;// used for restrictions
+	unique_ptr<stack<tuple<int,int>>> pairs(new stack<tuple<int,int>>);// used for restrictions
 	vector<int> uavsccs;// indices of uavs used to link sparse connected components, empty at start
 	igraph_t* solG0=nullptr;
 
