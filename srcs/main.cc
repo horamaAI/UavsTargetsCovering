@@ -7,6 +7,7 @@
 #include <ctime>
 
 #include <tuple>
+#include <memory>
 
 #include "heads/clustering.h"
 
@@ -31,14 +32,14 @@ int main(int argc, char** argv)
 
 	vector<double*>* res = elbow();
 
-printf("In main res size : %d\n", res->size());
+printf("In main res size : %lu\n", res->size());
 /*
 	i--;// out print where it stopped
 	printf("\nFinal series %d, wss : %f, res uavs %d\n\n", i, wss, res->uavs_.size());
 */
 /*
 	FILE* fp;
-	fp=fopen("resTrue.csv","w");
+	fp=fopen("./out/resTrue.csv","w");
 	for(i=1;i<=res->n_uavs;i++)
 		for (j=0;j<dim;j++)
 		{
@@ -49,20 +50,18 @@ printf("In main res size : %d\n", res->size());
 	fclose(fp);
 */
 
-	Solution* rawsln=new Solution();// create first raw solution
+	unique_ptr<Solution> rawsln(new Solution());// create first raw solution
 	rawsln->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
-	int i=0, j=0;
-	
 	double* buffdouble;
-	for(i=0; i<res->size(); i++){
+	for(unsigned long int i=0; i<res->size(); i++){
 		buffdouble=new double[inputdata::dim];
-		for(j=0; j<inputdata::dim; j++)	buffdouble[j]=(*res)[i][j];
+		for(int j=0; j<inputdata::dim; j++)	buffdouble[j]=(*res)[i][j];
 		rawsln->addTonetwork(buffdouble, range);
 	}
 
 	// housekeeping
-	for(j=0;j<res->size();j++)
+	for(unsigned long int j=0;j<res->size();j++)
 	{
 		delete[] (*res)[j];
 		(*res)[j]=nullptr;
@@ -81,11 +80,11 @@ printf("In main res size : %d\n", res->size());
 	net->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 //	FILE* fp;
-//	fp=fopen("finalres.csv","w");
+//	fp=fopen("./out/finalres.csv","w");
 	for(map<int,double>::iterator it=(*uavscoverage).begin(); it!=(*uavscoverage).end(); it++)
 	{
 		buffdouble=new double[inputdata::dim];
-		for (j=0; j<inputdata::dim; j++)
+		for (int j=0; j<inputdata::dim; j++)
 		{
 			// skip comma not needed after last dim value
 //			if(j==dim-1)	fprintf(fp,"%lf\n", rawsln->uavs_[it->first][j]);
@@ -97,7 +96,7 @@ printf("In main res size : %d\n", res->size());
 	}
 //	fclose(fp);
 	
-	delete rawsln;
+//	delete rawsln;
 	rawsln=nullptr;
 
 	stack<tuple<int,int>>* pairs=new stack<tuple<int,int>>;// used for restrictions
@@ -114,9 +113,9 @@ printf("In main res size : %d\n", res->size());
 
 //	Store the coordinates of the active uavs
 //	FILE* fp;
-//	fp=fopen("lin_sol1cover.csv","w");
+//	fp=fopen("./out/lin_sol1cover.csv","w");
 /*
-	fp=fopen("lin_solRange250.csv","w");
+	fp=fopen("./out/lin_solRange250.csv","w");
 	for(i=1;i<=res->n_uavs;i++)
 	{
 		if(soln[i]>0)
