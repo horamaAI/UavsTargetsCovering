@@ -99,7 +99,7 @@ printf("In main res size : %lu\n", res->size());
 //	delete rawsln;
 	rawsln=nullptr;
 
-	unique_ptr<stack<tuple<int,int>>> pairs(new stack<tuple<int,int>>);// used for restrictions
+	stack<tuple<int,int>>* pairs=new stack<tuple<int,int>>;// used for restrictions
 	vector<int> uavsccs;// indices of uavs used to link sparse connected components, empty at start
 	igraph_t* solG0=nullptr;
 
