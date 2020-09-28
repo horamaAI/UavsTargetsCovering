@@ -95,9 +95,9 @@ printf("In main res size : %lu\n", res->size());
 		net->addTonetwork(buffdouble, range);// update distance of network of uavs
 	}
 //	fclose(fp);
-	
+
 //	delete rawsln;
-	rawsln=nullptr;
+//	rawsln=nullptr;
 
 	stack<tuple<int,int>>* pairs=new stack<tuple<int,int>>;// used for restrictions
 	vector<int> uavsccs;// indices of uavs used to link sparse connected components, empty at start

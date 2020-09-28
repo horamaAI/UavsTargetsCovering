@@ -43,4 +43,4 @@ $(OBJS)/inputdata.o: inputdata.cc
 	$(CPP) $(DBG) -o $@ -c $< $(CFLAGS)
 
 clean:
-	rm -rf $(OBJS)/*.o
+	rm -rf $(OBJS)/*.o a.out
