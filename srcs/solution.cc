@@ -45,7 +45,7 @@ printf("net n_uavs %lu threshold %f and restrict %d\n", this->uavs_.size(), rang
 	double min_distance=DBL_MAX;// distance of two closest nodes but out of range (in differents connected components)
 	double current_distance;// used to place a new uav
 	//int buffn1=-1,buffn2=-1, n1=-1, n2=-1;//two closest but out of range nodes
-	int n1=-1, n2=-1;//two closest but out of range nodes
+	unsigned long int n1=ULONG_MAX, n2=ULONG_MAX;//two closest but out of range nodes
 
 	// Use of a brute force branching here. (Maybe undeterministic better?)
 	// brute force : create one unique connected component by iteratively branching the 2 closest connected components
@@ -96,13 +96,13 @@ printf("n_uavs %lu, k = %d, %d\n", this->uavs_.size(), k++, ncomps);
 					{// keep two nodes
 						if( dorestriction && !restricted && get<0>(pairs->top()) == i && get<1>(pairs->top()) == j )
 						{// restricted, skip
-printf("i uav2 n1 n2 pairs[0] pairs[1] : %lu %lu %d %d %d %d\n", i, j, n1, n2, get<0>(pairs->top()), get<1>(pairs->top()));
+printf("i uav2 n1 n2 pairs[0] pairs[1] : %lu %lu %lu %lu %lu %lu\n", i, j, n1, n2, get<0>(pairs->top()), get<1>(pairs->top()));
 printf("tests in \"restricted\", (pairs[0] == n1), (pairs[1] == n2) : %d %d\n", get<0>(pairs->top()) == n1,
 get<1>(pairs->top()) == n2);
 							restricted=true;
 							continue;
 						}
-printf("not restricted and n1 n2 ncomps : %d %d %d\n", n1, n2, ncomps);
+printf("not restricted and n1 n2 ncomps : %lu %lu %d\n", n1, n2, ncomps);
 						min_distance=current_distance;
 						n1=i;
 						n2=j;
@@ -116,7 +116,7 @@ printf("not restricted and n1 n2 ncomps : %d %d %d\n", n1, n2, ncomps);
 			// free vector of labels
 			igraph_vector_destroy(&labels);
 
-			if(n1<0 || n2<0)
+			if(n1==ULONG_MAX || n2==ULONG_MAX)
 			{
 				printf(" Something went wrong with graph, check since adding new uav will fail %s, %d, %s \n",
 					__FILE__, __LINE__, __FUNCTION__);
@@ -310,7 +310,8 @@ this->uavs_.size());
 
 	// Now that more variables are assigned => launch true populating phase
 	// solnsGraphs=(igraph_t**)malloc((*npairs)*sizeof(igraph_t*));
-	igraph_t* Gk;
+//	igraph_t* Gk;
+//	Gk=nullptr;
 	igraph_vector_t edges;
 	int nfirst=0;
 	long int ind1,ind2;// needed for the cast
@@ -606,7 +607,7 @@ map<int,double>* Solution::solve_linear_model(double range, double lb)
 		if( this->gcovs_[i].size() < lb )
 		{
 printf("Duplicate uavs for gnode %d, which is covered with %lu uavs \n", i, this->gcovs_[i].size());
-for(int z=0;z<this->uavs_.size();z++){
+for(unsigned long int z=0;z<this->uavs_.size();z++){
 //int buffz=net->gcovs_[i][z];
 cout<<this->uavs_[z][0]<<","<<this->uavs_[z][1]<<endl;
 }
@@ -704,6 +705,7 @@ printf("RANGE %f, lb %f\n",range,lb);
 	parm.presolve = GLP_ON;
 
 	int result_solver2=glp_intopt(lp, &parm);
+cerr<<"result_solver2 == "<<result_solver2<<endl;
 //	z = glp_get_obj_val(lp);
 	z = glp_mip_obj_val(lp);
 	

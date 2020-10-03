@@ -5,6 +5,7 @@
 #include <stack>
 #include <cfloat>
 #include <cstring>
+#include <climits>
 #include <cassert>
 
 #include "utils.h"
