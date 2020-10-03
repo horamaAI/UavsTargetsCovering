@@ -2,11 +2,13 @@
 #define UAVSCOVS_HEADS_INPUTDATA_H_
 
 #include <stdio.h>
+#include <fstream>
 #include <vector>
 #include <igraph.h>
 #include <glpk.h>
 #include <map>
 
+using namespace std;
 
 namespace inputdata
 {

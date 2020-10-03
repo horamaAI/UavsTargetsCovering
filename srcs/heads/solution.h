@@ -9,9 +9,6 @@
 
 #include "utils.h"
 
-
-using namespace std;
-
 class Solution{
 
     public :
