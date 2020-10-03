@@ -4,7 +4,7 @@ CPP = g++
 
 # Options of compilation
 DBG=-g
-CFLAGS = -Wall
+CFLAGS = -Wall -Werror
 
 # Additionnal libraries inclusion
 LDLIBS = -lglpk -ligraph -lm

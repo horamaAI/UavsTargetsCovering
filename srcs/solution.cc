@@ -31,8 +31,8 @@ void Solution::addTonetwork(double *toadd, double range)
 
 
 
-void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity, stack<tuple<int,int>>* pairs,
-							bool dorestriction)
+void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity
+	, stack<tuple<unsigned long int, unsigned long int>>* pairs, bool dorestriction)
 {// boolean value "restrict" says wether the restriction strategy used (restrict: false, and G isn't root G0), or not.
 	// If restriction not applied, then fill : **restr_list, **pairs, and * npairs.
 	// Otherwise, use these lists to apply the restrictions
@@ -259,7 +259,8 @@ if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << th
 
 
 
-void Solution::populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0, stack<tuple<int,int>>* pairs)
+void Solution::populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0
+	, stack<tuple<unsigned long int, unsigned long int>>* pairs)
 {// note : computing diameter of graph (O(n*|E|)) can cost more than comparing each nodes (O(n^2)) : eg : Complete
  // graph : n*|E| = n*sum_i_in{1...n-1}(i) > O(n^2) for n>3
 
@@ -528,13 +529,13 @@ printf("K ite %li\n", k);
 	}
 
 // ________________________________________________________________
-/* END uncomment here for populating steps
+\/\* END uncomment here for populating steps
 // ________________________________________________________________
 
 
 
 // ------------------------------------------------------    note to myself : start Independent comments
-/*
+\/\* 
 if(++k==1)
 {// keep topology of initial graph
 	FILE* fout;
