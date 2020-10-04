@@ -17,6 +17,10 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+	if(argc<=1){
+		printf("Please give required number of arguments\n");
+		return 1;
+	}
 
 	clock_t begin = clock();
 
@@ -130,4 +134,4 @@ printf("In main res size : %lu\n", res->size());
 	fclose(fp);
 */
 	return 0;
-};
+}

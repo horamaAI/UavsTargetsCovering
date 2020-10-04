@@ -23,6 +23,28 @@ class Solution{
         //igraph_t* gr_;// graph of the solution. Needed for connectivity checking
 
     public :
+
+        // Rule of five (Todo)
+        // Solution():gcovs_(nullptr){};
+        Solution():uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){};
+        ~Solution(){
+            // delete gcovs_;
+            cout<<"Destructor"<<endl;
+        };
+//      Copy constructor: Solution(const Solution& other):gcovs_(other->gcovs_){};
+        Solution(const Solution& other):uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){
+            cout<< "Copy constructor of " << &other << endl;
+        };
+        Solution& operator=(const Solution& other){
+            cout<< "Assignment operator override of " << &other << endl;
+            if(this != &other) {
+                //delete[] cstring;  // deallocate
+                // init(other.cstring);
+            }
+            return *this;            
+        };
+
+
         void addTonetwork(double *toadd, double range);
         void connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity
             , stack<tuple<unsigned long int, unsigned long int>>* pairs, bool dorestriction);

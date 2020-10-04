@@ -27,7 +27,7 @@ void Solution::addTonetwork(double *toadd, double range)
 		}
 	}
 	this->find_covers(newuav, range);// find the ground the new uav covers
-};
+}
 
 
 
@@ -207,7 +207,7 @@ cerr<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size() 
 	igraph_vector_destroy(&ite_edgs_first_graph);
 */
 
-};
+}
 
 
 
@@ -238,7 +238,7 @@ for(int a:net->gcovs_[grndi])
 printf(" %d ", a);
 printf("\n");
 */
-};
+}
 
 
 
@@ -255,7 +255,7 @@ if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << th
 			this->uavcovs_[uavj].push_back(i);
 		}
 	}
-};
+}
 
 
 
@@ -588,7 +588,7 @@ printf("\n");
 */
 // ------------------------------------------------------    Note to myself: end independent comments
 
-};
+}
 
 
 
@@ -629,16 +629,22 @@ TO ERASE : Done in addTonetwork
 printf("Begin building linear problem with %d ground nodes, and %lu uavs\n", inputdata::nbr_grnds, this->uavs_.size());
 	/* Build linear problem */
 	glp_prob *lp;
-	int ia[1+(inputdata::nbr_grnds*this->uavs_.size())],ja[1+(inputdata::nbr_grnds*this->uavs_.size())];
-	double ar[1+(inputdata::nbr_grnds*this->uavs_.size())], z=0.;
+	int* ia=new int[1+(inputdata::nbr_grnds*this->uavs_.size())];
+	int* ja=new int[1+(inputdata::nbr_grnds*this->uavs_.size())];
+	double* ar=new double[1+(inputdata::nbr_grnds*this->uavs_.size())];
+	double z=0.;
 	
 	lp = glp_create_prob();
 	glp_set_prob_name(lp, "set cover");
 	glp_set_obj_dir(lp, GLP_MIN);
 
 	/* for row names */
-	char row_names[inputdata::nbr_grnds+1][20];
-	char col_names[this->uavs_.size()+1][20];
+	vector<char*> row_names(inputdata::nbr_grnds+1);
+	for(int i=0; i<inputdata::nbr_grnds+1; i++)
+		row_names[i] = new char[20];
+	vector<char*> col_names(this->uavs_.size()+1);
+	for(unsigned long int i=0; i<this->uavs_.size()+1; i++)
+		col_names[i] = new char[20];
 	char buff[20];
 
 	glp_add_rows(lp, inputdata::nbr_grnds);
@@ -766,7 +772,7 @@ cerr<<"result_solver2 == "<<result_solver2<<endl;
 
 	// print in file connections uavs-ground nodes
 	fp=fopen("./out/uavs_grounds.csv","w");
-	int activecovers[inputdata::nbr_grnds];
+	int* activecovers = new int[inputdata::nbr_grnds];
 	for(int i=0; i<inputdata::nbr_grnds; i++)
 	{
 		activecovers[i]=0;
@@ -800,7 +806,7 @@ cerr<<"result_solver2 == "<<result_solver2<<endl;
 	delete covRes;
 
 	return soln;
-};
+}
 
 
 
@@ -810,7 +816,7 @@ bool Solution::uav_in_cover(vector<int> &gcovs, int uavindex){
 			return true;
 	}
 	return false;
-};
+}
 
 
 
@@ -844,6 +850,6 @@ void Solution::updateDistMat(double range)
 			this->distuav_[buffi].erase(this->distuav_[buffi].begin()+buffj);
 		}
 	}
-};
+}
 
 

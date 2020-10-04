@@ -23,7 +23,7 @@ namespace inputdata
     extern double bound_1;
     extern double bound_2;
 
-};
+}
 
 void readData(char** argv);
 
