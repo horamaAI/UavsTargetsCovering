@@ -24,7 +24,7 @@ class Solution{
 
     public :
 
-        // Rule of five (Todo)
+        // Rule of five (Tocomplete)
         // Solution():gcovs_(nullptr){};
         Solution():uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){};
         ~Solution(){
@@ -32,11 +32,22 @@ class Solution{
             cout<<"Destructor"<<endl;
         };
 //      Copy constructor: Solution(const Solution& other):gcovs_(other->gcovs_){};
-        Solution(const Solution& other):uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){
+        Solution(const Solution& other):uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){// copy constructor
             cout<< "Copy constructor of " << &other << endl;
+        };
+        Solution(const Solution&& other):uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){// move constructor
+            cout<< "Move constructor of " << &other << endl;
         };
         Solution& operator=(const Solution& other){
             cout<< "Assignment operator override of " << &other << endl;
+            if(this != &other) {
+                //delete[] cstring;  // deallocate
+                // init(other.cstring);
+            }
+            return *this;            
+        };
+        Solution& operator=(Solution&& other) noexcept{// move assignment
+            cout<< "Move assignment of " << &other << endl;
             if(this != &other) {
                 //delete[] cstring;  // deallocate
                 // init(other.cstring);
