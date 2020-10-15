@@ -1,11 +1,12 @@
 #include "heads/clustering.h"
 
-double k_means(double** data, int ngrounds, vector<double*>* clusts, double error_tolerance, double range)
+//double k_means(double** data, int ngrounds, vector<double*>* clusts, double error_tolerance, double range)
+double k_means(double** data, int ngrounds, vector<double*>* clusts, double error_tolerance)
 {
 
     double old_error, error = DBL_MAX; // DBL_MAX : macro defines maximum finite floating-point value : 1E+37
-	int ninres[clusts->size()]={};// gives the n elements in each cluster
-	int gcovs[inputdata::nbr_grnds];
+	int* ninres = new int[clusts->size()];// gives the n elements in each cluster
+	int* gcovs = new int[inputdata::nbr_grnds];
 	vector<double*> cl(clusts->size());// temporary centroids
 	for(unsigned long int h=0; h<clusts->size(); h++)
 		cl[h]=new double[inputdata::dim];
@@ -69,7 +70,7 @@ double k_means(double** data, int ngrounds, vector<double*>* clusts, double erro
 	}
 
 	return error;
-};
+}
 
 
 
@@ -79,7 +80,7 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 	// required memory allocation for solution
 	vector<double*>* res=new vector<double*>;
 	vector<int> ninres;// gives the n elements in each cluster
-	int gcovs[nbr_grnds];
+	int* gcovs= new int[nbr_grnds];
 	vector<double*> cl;// temporary centroids, contains sum of elements in cluster, to build clusters
 
 	// Init first cluster with first element
@@ -141,7 +142,7 @@ vector<double*>* onepassmethod(double** input_data, int nbr_grnds, double range)
 	}
 
 	return res;
-};
+}
 
 
 vector<double*>* elbow(){
@@ -167,7 +168,8 @@ printf("nbr grnds : %d\n", inputdata::nbr_grnds);
 		
 		// do until elbow criteria satisfied:
 		res_plus_2=onepassmethod(inputdata::grnds, inputdata::nbr_grnds, inputdata::uavs_range/i);
-		wss=k_means(inputdata::grnds, inputdata::nbr_grnds, res_plus_2, 0.0001, inputdata::uavs_range/i);
+		//wss=k_means(inputdata::grnds, inputdata::nbr_grnds, res_plus_2, 0.0001, inputdata::uavs_range/i);
+		wss=k_means(inputdata::grnds, inputdata::nbr_grnds, res_plus_2, 0.0001);
 printf("i %d, wss. %f, n_uavs %lu\n", i, wss, res_plus_2->size());
 		i++;
 		if(i<=3)

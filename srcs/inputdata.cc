@@ -3,11 +3,11 @@
 
 inline
 int STREAM_FAIL(const char *FROM_FILE, int AT_LINE, const char *IN_FUNCTION)
-{printf("STREAM_FAILURE, line %d, function %s, file %s\n", AT_LINE, IN_FUNCTION, FROM_FILE);return EXIT_FAILURE;};
+{printf("STREAM_FAILURE, line %d, function %s, file %s\n", AT_LINE, IN_FUNCTION, FROM_FILE);return EXIT_FAILURE;}
 
 inline
 int MEMO_FAIL(const char *FROM_FILE, int AT_LINE, const char *IN_FUNCTION)
-{printf("MEMO_ALLOC_FAILURE, line %d, function %s, file %s\n", AT_LINE, IN_FUNCTION, FROM_FILE);return EXIT_FAILURE;};
+{printf("MEMO_ALLOC_FAILURE, line %d, function %s, file %s\n", AT_LINE, IN_FUNCTION, FROM_FILE);return EXIT_FAILURE;}
 
 
 namespace inputdata {
@@ -22,7 +22,7 @@ namespace inputdata {
     double bound_1;
     double bound_2;
 
-};
+}
 
 
 void readData(char** argv)
@@ -68,4 +68,4 @@ void readData(char** argv)
 
 	fclose(fp);
 
-};
+}

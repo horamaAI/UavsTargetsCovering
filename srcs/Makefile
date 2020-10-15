@@ -4,7 +4,8 @@ CPP = g++
 
 # Options of compilation
 DBG=-g
-CFLAGS = -Wall
+#CXXFLAGS = -Wall -Werror
+CXXFLAGS = -O0 -std=c++11 -Wall -Wextra -Wshadow -pedantic -Weffc++ -Werror
 
 # Additionnal libraries inclusion
 LDLIBS = -lglpk -ligraph -lm
@@ -22,25 +23,25 @@ OUT	= a.out
 
 
 all: $(OBJS)/main.o $(OBJS)/clustering.o $(OBJS)/solution.o $(OBJS)/utils.o $(OBJS)/inputdata.o
-	$(CPP) $(DBG) $(LDLIBS) $(CFLAGS) -o $(OUT) $^
+	$(CPP) $(DBG) $(LDLIBS) $(CXXFLAGS) -o $(OUT) $^
 
 $(OBJS)/main.o: main.cc
-	$(CPP) $(DBG) -o $@ -c $< $(CFLAGS)
+	$(CPP) $(DBG) -o $@ -c $< $(CXXFLAGS)
 
 #block.o: block.cc
-#	$(CPP) -c $(CFLAGS) block.cc -std=c++11
+#	$(CPP) -c $(CXXFLAGS) block.cc -std=c++11
 
 $(OBJS)/clustering.o: clustering.cc
-	$(CPP) $(DBG) -o $@ -c $< $(CFLAGS)
+	$(CPP) $(DBG) -o $@ -c $< $(CXXFLAGS)
 
 $(OBJS)/solution.o: solution.cc
-	$(CPP) $(DBG) -o $@ -c $< $(CFLAGS)
+	$(CPP) $(DBG) -o $@ -c $< $(CXXFLAGS)
 
 $(OBJS)/utils.o: utils.cc
-	$(CPP) $(DBG) -o $@ -c $< $(CFLAGS)
+	$(CPP) $(DBG) -o $@ -c $< $(CXXFLAGS)
 
 $(OBJS)/inputdata.o: inputdata.cc
-	$(CPP) $(DBG) -o $@ -c $< $(CFLAGS)
+	$(CPP) $(DBG) -o $@ -c $< $(CXXFLAGS)
 
 clean:
-	rm -rf $(OBJS)/*.o
+	rm -rf $(OBJS)/*.o a.out
