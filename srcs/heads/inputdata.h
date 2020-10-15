@@ -2,11 +2,13 @@
 #define UAVSCOVS_HEADS_INPUTDATA_H_
 
 #include <stdio.h>
+#include <fstream>
 #include <vector>
 #include <igraph.h>
 #include <glpk.h>
 #include <map>
 
+using namespace std;
 
 namespace inputdata
 {
@@ -21,7 +23,7 @@ namespace inputdata
     extern double bound_1;
     extern double bound_2;
 
-};
+}
 
 void readData(char** argv);
 

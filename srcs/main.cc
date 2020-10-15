@@ -17,6 +17,10 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+	if(argc<=1){
+		printf("Please give required number of arguments\n");
+		return 1;
+	}
 
 	clock_t begin = clock();
 
@@ -76,7 +80,7 @@ printf("In main res size : %lu\n", res->size());
 	map<int,double>* uavscoverage=rawsln->solve_linear_model(range, lb);
 
 	// copy solution into new and cleaner one, and at the same time store in file the coordinates of active uavs for coverage
-	Solution* net = new Solution();
+	unique_ptr<Solution> net(new Solution());
 	net->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 //	FILE* fp;
@@ -95,11 +99,12 @@ printf("In main res size : %lu\n", res->size());
 		net->addTonetwork(buffdouble, range);// update distance of network of uavs
 	}
 //	fclose(fp);
-	
-//	delete rawsln;
-	rawsln=nullptr;
 
-	stack<tuple<int,int>>* pairs=new stack<tuple<int,int>>;// used for restrictions
+//	delete rawsln;
+//	rawsln=nullptr;
+
+	// used for restrictions
+	stack<tuple<unsigned long int, unsigned long int>>* pairs=new stack<tuple<unsigned long int, unsigned long int>>;
 	vector<int> uavsccs;// indices of uavs used to link sparse connected components, empty at start
 	igraph_t* solG0=nullptr;
 
@@ -129,4 +134,4 @@ printf("In main res size : %lu\n", res->size());
 	fclose(fp);
 */
 	return 0;
-};
+}
