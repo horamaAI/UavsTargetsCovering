@@ -6,11 +6,10 @@ import math
 ncentroids=20000
 delta=510
 crop=1250
-withinpointsdeviation=1750
+withinpointsdeviation=2750
 maxtours=30
 allcentroids=[]
-#centroids=[[218.04, 728.903], [235.699, 303.518], [701.801, 264.429], [783.016, 738.101]]
-centroids=[[235.699, 303.518]]
+centroidseed=[[235.699, 303.518]]
 x0,xinf=0.,10000.
 y0,yinf=0.,10000.
 
@@ -31,19 +30,19 @@ for i in range(10) :
 	for j in range(10) :
 		if random.randint(0,1) > 0.2:
 			continue
-		for k in range(len(centroids)):
+		for k in range(len(centroidseed)):
 			tours = 0
 			while True and tours < maxtours:
 				tours = tours + 1
 				#print(round(random.uniform(-xinf,xinf),3))
 				aPoint=[0., 0.]
-				aPoint[0]=round(i*(xinf/10.)+centroids[k][0]+random.uniform(-xinf,xinf),3)
-				aPoint[1]=round(j*(yinf/10.)+centroids[k][0]+random.uniform(-yinf,yinf),3)
+				aPoint[0]=round(i*(xinf/10.)+centroidseed[k][0]+random.uniform(-xinf,xinf),3)
+				aPoint[1]=round(j*(yinf/10.)+centroidseed[k][0]+random.uniform(-yinf,yinf),3)
 				if satisfyConstraint(aPoint):
 					allcentroids.append(aPoint)# round to 2nd member decimal
 					break
 
-f=open("inputcentroids","w")
+f=open("./outs/input_"+str(len(allcentroids))+"_centroids_"+str(int(xinf))+"_"+str(int(yinf))+"_map.csv","w")
 
 for point in allcentroids :
 	f.write(str(point[0])+","+str(point[1])+"\n")
