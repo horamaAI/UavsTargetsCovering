@@ -3,7 +3,6 @@ from random import randint
 import math
 
 
-ncentroids=20000
 delta=510
 crop=1250
 withinpointsdeviation=2750

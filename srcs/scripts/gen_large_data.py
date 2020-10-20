@@ -6,15 +6,15 @@ import math
 dim=2
 x0,xinf=0,10000
 y0,yinf=0,10000
-ntargets=20000
+ntargets=5500
 centroids=[]
 in_centroids_counter=[]
 uavsradius=125.
-r=7*uavsradius
-r2=3*r
+r=10*uavsradius
+r2=r+(0.5*r)
 delta=50.
-nrelaxed=10250
-nscattered=1050
+nrelaxed=250
+nscattered=0
 targets=[]
 avrg=0.
 maxpercluster=0
@@ -47,7 +47,7 @@ def satisfyConstraints(newpoint, centroid_index):
 
 
 
-aFile="./outs/input_6_centroids_10000_10000_map.csv"
+aFile="./outs/input_8_centroids_10000_10000_map.csv"
 
 with open(aFile) as f:
 	lines=f.readlines()
@@ -57,8 +57,8 @@ with open(aFile) as f:
 
 for i in range(nscattered):
 	aPoint=[0., 0.]
-	aPoint[0]=round(random.uniform(x0+300, xinf-300),3)
-	aPoint[1]=round(random.uniform(x0+300, xinf-300),3)
+	aPoint[0]=round(random.uniform(x0+1300, xinf-1300),3)
+	aPoint[1]=round(random.uniform(x0+3300, xinf-3300),3)
 	targets.append(aPoint)# round to 2nd member decimal
 
 capital=ntargets-nscattered
@@ -87,7 +87,8 @@ while capital > 0 :
 
 	
 
-f=open(str(ntargets)+"_grounds.csv","w")
+f=open("./outs/"+str(ntargets)+"_grounds.csv","w")
+f2=open("./outs/"+str(ntargets)+"_grounds_coords.csv","w")
 f.write(str(18)+"\n")# to correct, at stage useless, depicts number of available uavs
 f.write(str(125)+"\n")# uavs range
 f.write(str(ntargets)+"\n")# number of ground targets
@@ -95,5 +96,6 @@ f.write(str(xinf)+","+str(yinf)+"\n")# size of map
 
 for point in targets :
 	f.write(str(point[0])+","+str(point[1])+"\n")
+	f2.write(str(point[0])+","+str(point[1])+"\n")
 
 f.close()
