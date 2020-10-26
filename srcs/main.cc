@@ -73,7 +73,7 @@ printf("In main res size : %lu\n", res->size());
 	delete res;//Housekeeping
 	res=nullptr;
 
-	double lb=2.0;
+	double lb=1.0;
 
 
 	// linear solver : return indices of uavs active for coverage, and the results of their linear program values
