@@ -127,8 +127,17 @@ cerr<<"result_solver2 == "<<result_solver2<<endl;
 	/* Gather results */
 	map<int,double> *soln=new map<int,double>;
 	// Needed for stats on covers (constraints, rows)
-	double sumrows=0, maxrowval=0, minrowval=res->uavs_.size(), tmp=0, lessThanAvrg=0, moreThanvrg=0;
+	double sumrows=0, avrg=0, maxrowval=0, minrowval=res->uavs_.size(), tmp=0, lessThanAvrg=0, moreThanvrg=0;
 	double* covRes=(double*)calloc(inputdata::nbr_grnds+1,sizeof(double));
+
+	for(int i=0; i<inputdata::nbr_grnds; i++)
+	{
+		tmp=glp_mip_row_val(lp, i+1);
+		sumrows += tmp;
+    }
+
+    avrg=sumrows/inputdata::nbr_grnds;
+    sumrows=0;
 
 	for(int i=0; i<inputdata::nbr_grnds; i++)
 	{// for statistics on the values returned by the rows
@@ -138,7 +147,7 @@ cerr<<"result_solver2 == "<<result_solver2<<endl;
 		sumrows += tmp;
 		if(tmp > maxrowval)	maxrowval=tmp;
 		if(tmp < minrowval)	minrowval=tmp;
-		if(tmp >= 3){moreThanvrg++;}else{lessThanAvrg++;}
+		if(tmp >= avrg){moreThanvrg++;}else{lessThanAvrg++;}
 		covRes[(int)tmp]++;
 	}
 
@@ -159,58 +168,17 @@ cerr<<"result_solver2 == "<<result_solver2<<endl;
 //	for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
 //		printf("[ %d : %f ] ", it->first, it->second);
 	
-	printf("\nRO == %f, max = %f, min = %f, aver = %f, lessThanAvrg = %f, moreThanvrg = %f\n",sumrows, maxrowval,
-		minrowval, sumrows/inputdata::nbr_grnds, lessThanAvrg, moreThanvrg);
+    printf("\nStatistics on the returned values on rows (sum of uavs covering the target, or \"row\") by the glpk mip solver\n");
+    printf("================================================================================================================\n");
+	printf("sum on all rows (targets) == %f, max value on a row = %f, min on row = %f, averg = %f, n_lessThanAvrg = %f,"
+        " n_moreThanvrg = %f\n", sumrows, maxrowval, minrowval, avrg, lessThanAvrg, moreThanvrg);
+
+	printf(" Obj func : %f and nactive uavs %lu\n",z, (*soln).size());
+
 //	for(int i=0;i<=(int)maxrowval;i++)
 //        if (covRes[i]>0) printf("cov[%d]=%f\t",i,covRes[i]);
 //	printf("\n");
 //	int activeuavs=0;
-
-	FILE* fp;
-	fp=fopen("./out/activeuavs.csv","w");
-	for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
-	{
-		for (int j=0; j<inputdata::dim; j++)
-		{
-			// skip comma not needed after last dim value
-			fprintf(fp,"%lf", res->uavs_[it->first][j]);
-			if(j==inputdata::dim-1)	fprintf(fp,"\n");
-			else	fprintf(fp,",");
-		}
-	}
-	fclose(fp);
-
-	// print in file connections uavs-ground nodes
-	fp=fopen("./out/uavs_grounds.csv","w");
-	int* activecovers = new int[inputdata::nbr_grnds];
-	for(int i=0; i<inputdata::nbr_grnds; i++)
-	{
-		activecovers[i]=0;
-		for(map<int,double>::iterator it=(*soln).begin(); it!=(*soln).end(); it++)
-		{
-			int uavk=it->first;
-			if( euclDistance(res->uavs_[uavk], inputdata::grnds[i]) <= range )
-			{
-				assert(res->uav_in_cover(res->gcovs_[i], uavk));// security safety, otherwise would be a problem
-				fprintf(fp,"%lf,%lf\n", inputdata::grnds[i][0], inputdata::grnds[i][1]);
-				fprintf(fp,"%lf,%lf\n\n", res->uavs_[uavk][0], res->uavs_[uavk][1]);
-				activecovers[i]++;
-			}
-		}
-	}
-
-	printf(" Obj func : %f and nactive uavs %lu\n",z, (*soln).size());
-	int max=0;
-	double sum=0;
-//	printf("Couples (ground, n active uavs covering it) : ");
-	for(int i=0; i<inputdata::nbr_grnds; i++)
-	{
-//		printf(" (%d, %d) ",i,activecovers[i]);
-		sum+=activecovers[i];
-		if(activecovers[i] > activecovers[max])	max=i;
-	}
-	printf("\nAverage : %f\n",sum/inputdata::nbr_grnds);
-	printf(" Max degree : %d with %d\n",max,activecovers[max]);
 	
 	// housekeeping
 	delete covRes;

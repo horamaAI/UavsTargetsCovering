@@ -34,12 +34,12 @@ void Solution::addTonetwork(double *toadd, double range)
 
 
 void Solution::connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity
-	, stack<tuple<unsigned long int, unsigned long int>>* pairs, bool dorestriction)
+	, stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions, bool dorestriction)
 {// boolean value "restrict" says wether the restriction strategy used (restrict: false, and G isn't root G0), or not.
-	// If restriction not applied, then fill : **restr_list, **pairs, and * npairs.
+	// If restriction not applied, then fill : **restr_list, **edges_for_restrictions, and * n_edges_for_restrictions.
 	// Otherwise, use these lists to apply the restrictions
 
-printf("net n_uavs %lu threshold %f and restrict %d\n", this->uavs_.size(), range, dorestriction);
+debug<<"Begins \"connect_CCs\" net n_uavs " << this->uavs_.size() << " threshold: "<< range << " and restrict = " << dorestriction;
 //printf(" vcount %li ecount %li\n", (long int)igraph_vcount(Gk), (long int)igraph_ecount(Gk));
 
 	igraph_integer_t ncomps=-1;// numbers of connected components
@@ -96,11 +96,13 @@ debug<< "n_uavs : " << this->uavs_.size() << " k = " << k++ << " d : " << ncomps
 					// check only if different connected component
 					if(current_distance<min_distance)
 					{// keep two nodes
-						if( dorestriction && !restricted && get<0>(pairs->top()) == i && get<1>(pairs->top()) == j )
+						if( dorestriction && !restricted && get<0>(edges_for_restrictions->top()) == i &&
+							get<1>(edges_for_restrictions->top()) == j )
 						{// restricted, skip
-printf("i uav2 n1 n2 pairs[0] pairs[1] : %lu %lu %lu %lu %lu %lu\n", i, j, n1, n2, get<0>(pairs->top()), get<1>(pairs->top()));
-printf("tests in \"restricted\", (pairs[0] == n1), (pairs[1] == n2) : %d %d\n", get<0>(pairs->top()) == n1,
-get<1>(pairs->top()) == n2);
+printf("i uav2 n1 n2 edg_for_restr[0] edg_for_restr[1] : %lu %lu %lu %lu %lu %lu\n", i, j, n1, n2,
+	get<0>(edges_for_restrictions->top()), get<1>(edges_for_restrictions->top()));
+printf("tests in \"restricted\", (edg_for_restr[0] == n1), (edg_for_restr[1] == n2) : %d %d\n",
+	get<0>(edges_for_restrictions->top()) == n1, get<1>(edges_for_restrictions->top()) == n2);
 							restricted=true;
 							continue;
 						}
@@ -153,7 +155,7 @@ debug<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size()
 
 			if( ! dorestriction )
 			{// build first connected sln, keep track of n1 and n2 for further "potential" restrictions
-				pairs->push(make_tuple(n1,n2));
+				edges_for_restrictions->push(make_tuple(n1,n2));
 			}
 
 //			if(net->dists[net->n_uavs][n1]<threshold && solverSln[net->n_uavs] > 0 && solverSln[n1] > 0)
@@ -252,7 +254,9 @@ void Solution::find_covers(int uavj, double range)
 //		if( euclDistance(this->uavs_[uavj],grnds[i]) <= range && !uav_in_cover(this->gcovs_[i], uavj))
 		if( euclDistance(this->uavs_[uavj], inputdata::grnds[i]) <= range )
 		{
-if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << this->uavs_[uavj][1] << endl;
+if(i==63){
+debug<< " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << this->uavs_[uavj][1];
+}
 			this->gcovs_[i].push_back(uavj);
 			this->uavcovs_[uavj].push_back(i);
 		}
@@ -262,7 +266,7 @@ if(i==63) cout << " uav: " << uavj << " - " << this->uavs_[uavj][0] << "," << th
 
 
 void Solution::populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0
-	, stack<tuple<unsigned long int, unsigned long int>>* pairs)
+	, stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions)
 {// note : computing diameter of graph (O(n*|E|)) can cost more than comparing each nodes (O(n^2)) : eg : Complete
  // graph : n*|E| = n*sum_i_in{1...n-1}(i) > O(n^2) for n>3
 
@@ -305,13 +309,13 @@ printf("\nend 1st graph and count %d\n",count);
 printf("Before connectCCs vcount %li ecount %li and n_uavs %lu\n", (long int)igraph_vcount(solnG0),
 (long int)igraph_ecount(solnG0), this->uavs_.size());
 
-	this->connect_CCs(solnG0, range, uavsconnectivity, pairs, false);
+	this->connect_CCs(solnG0, range, uavsconnectivity, edges_for_restrictions, false);
 
-printf("Test npairs == %lu, %lu uavs, and should be one connected component (passed connectCCs function)\n", pairs->size(),
-this->uavs_.size());
+printf("end connect_CCS and n_edg_for_restr == %lu, %lu uavs, and should be one connected component\
+	(passed connectCCs function)\n", edges_for_restrictions->size(), this->uavs_.size());
 
 	// Now that more variables are assigned => launch true populating phase
-	// solnsGraphs=(igraph_t**)malloc((*npairs)*sizeof(igraph_t*));
+	// solnsGraphs=(igraph_t**)malloc((*edges_for_restrictions)*sizeof(igraph_t*));
 //	igraph_t* Gk;
 //	Gk=nullptr;
 	igraph_vector_t edges;
@@ -368,11 +372,12 @@ int overallredundancy=0;
 for(i=1;i<=nbr_grnds;i++)	overallredundancy+=covers->g_covers[i];
 printf("G_0 has overall redundancy of %d\n",overallredundancy);
 
-		if(*npairs%2==0)
-		{// we want n even number of generated files, if there are npairs of newly generated files, if added to the starting graph,
-		//	we are still short of one file => easiest solution : copy starting solution in file named [blabla]_[npairs+1]
+		if(*n_edges_for_restrictions%2==0)
+		{// we want n even number of generated files, if there are n_edges_for_restrictions of newly generated files,
+		// if added to the starting graph, we are still short of one file => easiest solution : copy starting
+		// solution in file named [blabla]_[n_edges_for_restrictions+1]
 			strcpy(path,"./out/G_");
-			sprintf(buff, "%d", *npairs+1);
+			sprintf(buff, "%d", *n_edges_for_restrictions+1);
 			strcat(path,buff);
 			fout=fopen(path,"w");
 			igraph_vector_init(&edges, 0);
@@ -405,7 +410,7 @@ printf("G_0 has overall redundancy of %d\n",overallredundancy);
 			fclose(fout);
 		}
 
-	for (k=0; k < *npairs; k++)
+	for (k=0; k < *n_edges_for_restrictions; k++)
 	{
 		buffnets=(sln*)malloc(sizeof(sln));
 		// some values are not needed for filling (and allocation) since only the position of uavs (and distance between them)
@@ -476,7 +481,8 @@ count++;
 
 printf("K ite %li\n", k);
 
-		connect_CCs(buffnets, Gk, threshold, restr_list, pairs, npairs, true, *npairs-1-k);
+		connect_CCs(buffnets, Gk, threshold, restr_list, edges_for_restrictions, n_edges_for_restrictions, true,
+			*n_edges_for_restrictions-1-k);
 
 		// write into file to save memory
 		strcpy(path,"./out/G_");

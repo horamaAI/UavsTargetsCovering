@@ -80,8 +80,56 @@ printf("In main res size : %lu\n", res->size());
 	double lb=1.0;
 
 
-	// linear solver returns pairs of indices of uavs active for coverage, and the results of their linear program values
-	map<int,double>* uavscoverage=glpk_solve_linear_model(rawsln, range, lb);
+	// linear solver returns tuples of 1. indices of uavs active for coverage, and 2. the results of their linear program values
+	map<int,double>* lp_covers_solution=glpk_solve_linear_model(rawsln, range, lb);
+
+
+	// store results, and print stats
+	FILE* fp;
+	fp=fopen("./out/activeuavs.csv","w");
+	for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
+	{
+		for (int j=0; j<inputdata::dim; j++)
+		{
+			// skip comma not needed after last dim value
+			fprintf(fp,"%lf", rawsln->uavs_[it->first][j]);
+			if(j==inputdata::dim-1)	fprintf(fp,"\n");
+			else	fprintf(fp,",");
+		}
+	}
+	fclose(fp);
+
+	// print in file connections uavs-ground nodes
+	fp=fopen("./out/uavs_grounds.csv","w");
+	int* activecovers = new int[inputdata::nbr_grnds];
+	for(int i=0; i<inputdata::nbr_grnds; i++)
+	{
+		activecovers[i]=0;
+		for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
+		{
+			int uavk=it->first;
+			if( euclDistance(rawsln->uavs_[uavk], inputdata::grnds[i]) <= range )
+			{
+				assert(rawsln->uav_in_cover(rawsln->gcovs_[i], uavk));// security safety, otherwise would be a problem
+				fprintf(fp,"%lf,%lf\n", inputdata::grnds[i][0], inputdata::grnds[i][1]);
+				fprintf(fp,"%lf,%lf\n\n", rawsln->uavs_[uavk][0], rawsln->uavs_[uavk][1]);
+				activecovers[i]++;
+			}
+		}
+	}
+
+	int max=0;
+	double sum=0;
+//	printf("Couples (ground, n active uavs covering it) : ");
+	for(int i=0; i<inputdata::nbr_grnds; i++)
+	{
+//		printf(" (%d, %d) ",i,activecovers[i]);
+		sum+=activecovers[i];
+		if(activecovers[i] > activecovers[max])	max=i;
+	}
+	printf("\nAverage of distribution of provided covers on all ground nodes : %f\n",sum/inputdata::nbr_grnds);
+	printf("Max degree : %d with %d\n", max, activecovers[max]);
+
 
 	// copy solution into new and cleaner one, and at the same time store in file the coordinates of active uavs for coverage
 	unique_ptr<Solution> net(new Solution());
@@ -89,7 +137,7 @@ printf("In main res size : %lu\n", res->size());
 
 //	FILE* fp;
 //	fp=fopen("./out/finalres.csv","w");
-	for(map<int,double>::iterator it=(*uavscoverage).begin(); it!=(*uavscoverage).end(); it++)
+	for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
 	{
 		buffdouble=new double[inputdata::dim];
 		for (int j=0; j<inputdata::dim; j++)
@@ -108,16 +156,17 @@ printf("In main res size : %lu\n", res->size());
 //	rawsln=nullptr;
 
 	// used for restrictions
-	stack<tuple<unsigned long int, unsigned long int>>* pairs=new stack<tuple<unsigned long int, unsigned long int>>;
+	stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions
+		=new stack<tuple<unsigned long int, unsigned long int>>;
 	vector<int> uavsccs;// indices of uavs used to link sparse connected components, empty at start
 	igraph_t* solG0=nullptr;
 
-//	populate(net, uavscoverage, &uavsccs, range, solG0, pairs);
-	net->populate(&uavsccs, range, solG0, pairs);
+//	populate(net, uavscoverage, &uavsccs, range, solG0, edges_for_restrictions);
+	net->populate(&uavsccs, range, solG0, edges_for_restrictions);
 
 cerr<<"Of initial number of generated positions :"<<rawsln->uavs_.size()<<endl;
-cerr<<"number of activated uavs before populating :"<<uavscoverage->size()<<endl;
-cerr<<", and thus number of additional uavs = "<<net->uavs_.size()-uavscoverage->size()<<endl;
+cerr<<"number of activated uavs before populating :"<<lp_covers_solution->size()<<endl;
+cerr<<", and thus number of additional uavs = "<<net->uavs_.size()-lp_covers_solution->size()<<endl;
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

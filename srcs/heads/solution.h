@@ -58,11 +58,11 @@ class Solution{
 
         void addTonetwork(double *toadd, double range);
         void connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity
-            , stack<tuple<unsigned long int, unsigned long int>>* pairs, bool dorestriction);
+            , stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions, bool dorestriction);
         void duplicate_uavs(double lb, int grndi, double range);
         void find_covers(int uavj, double range);// Find every covers of each ground node
         void populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0
-            , stack<tuple<unsigned long int, unsigned long int>>* pairs);
+            , stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions);
         // map<int,double>* solve_linear_model(double range, double lb);
         igraph_t* translate(double threshold, double* solverSln);
         bool uav_in_cover(vector<int> &gcovs, int uavindex);
