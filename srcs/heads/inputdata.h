@@ -8,6 +8,8 @@
 #include <glpk.h>
 #include <map>
 
+#include "debug.h"
+
 using namespace std;
 
 namespace inputdata
@@ -25,6 +27,6 @@ namespace inputdata
 
 }
 
-void readData(char** argv);
+void readData(const char* argv[]);
 
 #endif // UAVSCOVS_HEADS_INPUTDATA_H_

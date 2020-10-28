@@ -15,8 +15,11 @@
 using namespace std;
 
 
-int main(int argc, char** argv)
+int main(int argc, const char* argv[])
 {
+
+	Debug::init(argc, argv); // optional way of initializing module
+	
 	if(argc<=1){
 		printf("Please give required number of arguments\n");
 		return 1;
@@ -54,7 +57,8 @@ printf("In main res size : %lu\n", res->size());
 	fclose(fp);
 */
 
-	unique_ptr<Solution> rawsln(new Solution());// create first raw solution
+	//unique_ptr<Solution> rawsln(new Solution());// create first raw solution
+	Solution* rawsln(new Solution());// create first raw solution
 	rawsln->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 	double* buffdouble;
@@ -76,8 +80,8 @@ printf("In main res size : %lu\n", res->size());
 	double lb=1.0;
 
 
-	// linear solver : return indices of uavs active for coverage, and the results of their linear program values
-	map<int,double>* uavscoverage=rawsln->solve_linear_model(range, lb);
+	// linear solver returns pairs of indices of uavs active for coverage, and the results of their linear program values
+	map<int,double>* uavscoverage=glpk_solve_linear_model(rawsln, range, lb);
 
 	// copy solution into new and cleaner one, and at the same time store in file the coordinates of active uavs for coverage
 	unique_ptr<Solution> net(new Solution());
@@ -111,6 +115,9 @@ printf("In main res size : %lu\n", res->size());
 //	populate(net, uavscoverage, &uavsccs, range, solG0, pairs);
 	net->populate(&uavsccs, range, solG0, pairs);
 
+cerr<<"Of initial number of generated positions :"<<rawsln->uavs_.size()<<endl;
+cerr<<"number of activated uavs before populating :"<<uavscoverage->size()<<endl;
+cerr<<", and thus number of additional uavs = "<<net->uavs_.size()-uavscoverage->size()<<endl;
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

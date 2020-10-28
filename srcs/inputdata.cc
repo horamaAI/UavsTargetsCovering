@@ -25,7 +25,7 @@ namespace inputdata {
 }
 
 
-void readData(char** argv)
+void readData(const char* argv[])
 {
 	FILE* fp;
 

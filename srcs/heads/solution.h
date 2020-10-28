@@ -63,7 +63,7 @@ class Solution{
         void find_covers(int uavj, double range);// Find every covers of each ground node
         void populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0
             , stack<tuple<unsigned long int, unsigned long int>>* pairs);
-        map<int,double>* solve_linear_model(double range, double lb);
+        // map<int,double>* solve_linear_model(double range, double lb);
         igraph_t* translate(double threshold, double* solverSln);
         bool uav_in_cover(vector<int> &gcovs, int uavindex);
         void updateDistMat(double range);
