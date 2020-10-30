@@ -26,16 +26,16 @@ class Solution{
 
         // Rule of five (Tocomplete)
         // Solution():gcovs_(nullptr){};
-        Solution():uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){};
+        Solution():uavs_(), gcovs_(new vector<int>[inputdata::nbr_grnds]), uavcovs_(), outdeg_(), distuav_(){};
         ~Solution(){
             // delete gcovs_;
             cout<<"Destructor"<<endl;
         };
 //      Copy constructor: Solution(const Solution& other):gcovs_(other->gcovs_){};
-        Solution(const Solution& other):uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){// copy constructor
+        Solution(const Solution& other):uavs_(), gcovs_(new vector<int>[inputdata::nbr_grnds]), uavcovs_(), outdeg_(), distuav_(){// copy constructor
             cout<< "Copy constructor of " << &other << endl;
         };
-        Solution(const Solution&& other):uavs_(), gcovs_(nullptr), uavcovs_(), outdeg_(), distuav_(){// move constructor
+        Solution(const Solution&& other):uavs_(), gcovs_(new vector<int>[inputdata::nbr_grnds]), uavcovs_(), outdeg_(), distuav_(){// move constructor
             cout<< "Move constructor of " << &other << endl;
         };
         Solution& operator=(const Solution& other){
@@ -59,7 +59,7 @@ class Solution{
         void addTonetwork(double *toadd, double range);
         void connect_CCs(igraph_t* Gk, double range, vector<int>* uavsconnectivity
             , stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions, bool dorestriction);
-        void duplicate_uavs(double lb, int grndi, double range);
+        void duplicate_uav(double lb, int grndi, double range);
         void find_covers(int uavj, double range);// Find every covers of each ground node
         void populate(vector<int>* uavsconnectivity, double range, igraph_t* solnG0
             , stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions);

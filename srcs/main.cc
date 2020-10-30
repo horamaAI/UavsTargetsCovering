@@ -34,10 +34,13 @@ int main(int argc, const char* argv[])
 
 //	double radius=(uavs_range/2);
 	double range=inputdata::uavs_range;
+	double lb=1.0;
+	unsigned long int n_clustering=0;
 
 	//translate(res, radius);
 
 	vector<double*>* res = elbow();
+	n_clustering=res->size();
 
 printf("In main res size : %lu\n", res->size());
 /*
@@ -59,7 +62,7 @@ printf("In main res size : %lu\n", res->size());
 
 	//unique_ptr<Solution> rawsln(new Solution());// create first raw solution
 	Solution* rawsln(new Solution());// create first raw solution
-	rawsln->gcovs_=new vector<int>[inputdata::nbr_grnds];
+	//rawsln->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 	double* buffdouble;
 	for(unsigned long int i=0; i<res->size(); i++){
@@ -77,14 +80,11 @@ printf("In main res size : %lu\n", res->size());
 	delete res;//Housekeeping
 	res=nullptr;
 
-	double lb=1.0;
-
-
 	// linear solver returns tuples of 1. indices of uavs active for coverage, and 2. the results of their linear program values
 	map<int,double>* lp_covers_solution=glpk_solve_linear_model(rawsln, range, lb);
 
 
-	// store results, and print stats
+	// store results of mip solver
 	FILE* fp;
 	fp=fopen("./out/activeuavs.csv","w");
 	for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
@@ -132,8 +132,8 @@ printf("In main res size : %lu\n", res->size());
 
 
 	// copy solution into new and cleaner one, and at the same time store in file the coordinates of active uavs for coverage
-	unique_ptr<Solution> net(new Solution());
-	net->gcovs_=new vector<int>[inputdata::nbr_grnds];
+	unique_ptr<Solution> final_graph(new Solution());
+	//final_graph->gcovs_=new vector<int>[inputdata::nbr_grnds];
 
 //	FILE* fp;
 //	fp=fopen("./out/finalres.csv","w");
@@ -148,7 +148,7 @@ printf("In main res size : %lu\n", res->size());
 			
 			buffdouble[j]=rawsln->uavs_[it->first][j];
 		}
-		net->addTonetwork(buffdouble, range);// update distance of network of uavs
+		final_graph->addTonetwork(buffdouble, range);// update distance of network of uavs
 	}
 //	fclose(fp);
 
@@ -162,11 +162,15 @@ printf("In main res size : %lu\n", res->size());
 	igraph_t* solG0=nullptr;
 
 //	populate(net, uavscoverage, &uavsccs, range, solG0, edges_for_restrictions);
-	net->populate(&uavsccs, range, solG0, edges_for_restrictions);
+	final_graph->populate(&uavsccs, range, solG0, edges_for_restrictions);
 
-cerr<<"Of initial number of generated positions :"<<rawsln->uavs_.size()<<endl;
+cerr<<"Of initial number of generated positions :"<<n_clustering<<endl;
 cerr<<"number of activated uavs before populating :"<<lp_covers_solution->size()<<endl;
-cerr<<", and thus number of additional uavs = "<<net->uavs_.size()-lp_covers_solution->size()<<endl;
+cerr<<", and thus number of additional uavs = "<<final_graph->uavs_.size()-lp_covers_solution->size()<<endl;
+sum=0;
+for(int i=0; i<inputdata::nbr_grnds; i++)
+sum+=final_graph->gcovs_[i].size();
+cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 
 	clock_t end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

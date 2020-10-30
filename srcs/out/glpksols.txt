@@ -1,7 +1,7 @@
 Problem:    set cover
-Rows:       125
-Columns:    107
-Non-zeros:  977
+Rows:       50
+Columns:    100
+Non-zeros:  100
 Status:     UNDEFINED
 Objective:  0 (MINimum)
 
@@ -57,81 +57,6 @@ Objective:  0 (MINimum)
     48 r48          B              0             2               
     49 r49          B              0             2               
     50 r50          B              0             2               
-    51 r51          B              0             2               
-    52 r52          B              0             2               
-    53 r53          B              0             2               
-    54 r54          B              0             2               
-    55 r55          B              0             2               
-    56 r56          B              0             2               
-    57 r57          B              0             2               
-    58 r58          B              0             2               
-    59 r59          B              0             2               
-    60 r60          B              0             2               
-    61 r61          B              0             2               
-    62 r62          B              0             2               
-    63 r63          B              0             2               
-    64 r64          B              0             2               
-    65 r65          B              0             2               
-    66 r66          B              0             2               
-    67 r67          B              0             2               
-    68 r68          B              0             2               
-    69 r69          B              0             2               
-    70 r70          B              0             2               
-    71 r71          B              0             2               
-    72 r72          B              0             2               
-    73 r73          B              0             2               
-    74 r74          B              0             2               
-    75 r75          B              0             2               
-    76 r76          B              0             2               
-    77 r77          B              0             2               
-    78 r78          B              0             2               
-    79 r79          B              0             2               
-    80 r80          B              0             2               
-    81 r81          B              0             2               
-    82 r82          B              0             2               
-    83 r83          B              0             2               
-    84 r84          B              0             2               
-    85 r85          B              0             2               
-    86 r86          B              0             2               
-    87 r87          B              0             2               
-    88 r88          B              0             2               
-    89 r89          B              0             2               
-    90 r90          B              0             2               
-    91 r91          B              0             2               
-    92 r92          B              0             2               
-    93 r93          B              0             2               
-    94 r94          B              0             2               
-    95 r95          B              0             2               
-    96 r96          B              0             2               
-    97 r97          B              0             2               
-    98 r98          B              0             2               
-    99 r99          B              0             2               
-   100 r100         B              0             2               
-   101 r101         B              0             2               
-   102 r102         B              0             2               
-   103 r103         B              0             2               
-   104 r104         B              0             2               
-   105 r105         B              0             2               
-   106 r106         B              0             2               
-   107 r107         B              0             2               
-   108 r108         B              0             2               
-   109 r109         B              0             2               
-   110 r110         B              0             2               
-   111 r111         B              0             2               
-   112 r112         B              0             2               
-   113 r113         B              0             2               
-   114 r114         B              0             2               
-   115 r115         B              0             2               
-   116 r116         B              0             2               
-   117 r117         B              0             2               
-   118 r118         B              0             2               
-   119 r119         B              0             2               
-   120 r120         B              0             2               
-   121 r121         B              0             2               
-   122 r122         B              0             2               
-   123 r123         B              0             2               
-   124 r124         B              0             2               
-   125 r125         B              0             2               
 
    No. Column name  St   Activity     Lower bound   Upper bound    Marginal
 ------ ------------ -- ------------- ------------- ------------- -------------
@@ -235,13 +160,6 @@ Objective:  0 (MINimum)
     98 x98          NL             0             0             1         < eps
     99 x99          NL             0             0             1         < eps
    100 x100         NL             0             0             1         < eps
-   101 x101         NL             0             0             1         < eps
-   102 x102         NL             0             0             1         < eps
-   103 x103         NL             0             0             1         < eps
-   104 x104         NL             0             0             1         < eps
-   105 x105         NL             0             0             1         < eps
-   106 x106         NL             0             0             1         < eps
-   107 x107         NL             0             0             1         < eps
 
 Karush-Kuhn-Tucker optimality conditions:
 

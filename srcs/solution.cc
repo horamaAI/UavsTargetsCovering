@@ -215,7 +215,7 @@ debug<< "Tests |V(G)| = " << (long int)igraph_vcount(Gk) << ", net->uavs_.size()
 
 
 
-void Solution::duplicate_uavs(double lb, int grndi, double range)
+void Solution::duplicate_uav(double lb, int grndi, double range)
 {/* lb for knowing if ground needs more covers, counts[] the list which gives for each ground node the number of uavs covering it,
 	covers[] the list of aforementioned covers */
 

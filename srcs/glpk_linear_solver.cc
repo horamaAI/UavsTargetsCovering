@@ -20,7 +20,7 @@ for(unsigned long int z=0;z<res->uavs_.size();z++){
 //int buffz=net->gcovs_[i][z];
 cout<<res->uavs_[z][0]<<","<<res->uavs_[z][1]<<endl;
 }
-			res->duplicate_uavs(lb, i, range);
+			res->duplicate_uav(lb, i, range);
 //			if(!changedstate)	changedstate=true;
 //			break;
 		}
