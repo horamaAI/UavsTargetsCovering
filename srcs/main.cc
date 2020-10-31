@@ -36,6 +36,7 @@ int main(int argc, const char* argv[])
 	double range=inputdata::uavs_range;
 	double lb=1.0;
 	unsigned long int n_clustering=0;
+	unsigned long int n_scp=0;
 
 	//translate(res, radius);
 
@@ -151,6 +152,7 @@ printf("In main res size : %lu\n", res->size());
 		final_graph->addTonetwork(buffdouble, range);// update distance of network of uavs
 	}
 //	fclose(fp);
+	n_scp=final_graph->uavs_.size();
 
 //	delete rawsln;
 //	rawsln=nullptr;
@@ -176,22 +178,19 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 	printf("|Time spent %f\n",time_spent);
 
-//	Store the coordinates of the active uavs
-//	FILE* fp;
-//	fp=fopen("./out/lin_sol1cover.csv","w");
-/*
-	fp=fopen("./out/lin_solRange250.csv","w");
-	for(i=1;i<=res->n_uavs;i++)
+//	Store the coordinates of uavs used for connectivity
+	fp=fopen("./out/uavs_connectivity.csv","w");
+
+	for(unsigned long int i=n_scp; i<final_graph->uavs_.size(); i++)
 	{
-		if(soln[i]>0)
-			for (j=0;j<dim;j++)
-			{
-				// skip comma not needed after last dim value
-				if(j==dim-1)	fprintf(fp,"%lf\n", res->uavs_[i][j]);
-				else fprintf(fp,"%lf,", res->uavs_[i][j]);
-			}
+		for (int j=0; j<inputdata::dim; j++)
+		{
+			// skip comma not needed after last dim value
+			if(j==inputdata::dim-1)	fprintf(fp,"%lf\n", final_graph->uavs_[i][j]);
+			else fprintf(fp,"%lf,", final_graph->uavs_[i][j]);
+		}
 	}
 	fclose(fp);
-*/
+
 	return 0;
 }
