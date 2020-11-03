@@ -2,7 +2,10 @@ alldata=[]
 import random
 from random import randint
 import math
+import sys
 
+
+'''
 dim=2
 x0,xinf=0,10000
 y0,yinf=0,10000
@@ -20,27 +23,27 @@ avrg=0.
 maxpercluster=0
 maxtourperrandom=100
 aFile="./outs/input_8_centroids_10000_10000_map.csv"
-
-
 '''
+
+
 dim=2
-x0,xinf=0,1000
-y0,yinf=0,1000
-ntargets=300
+x0,xinf=0,10000
+y0,yinf=0,10000
+ntargets=1000
 centroids=[]
 in_centroids_counter=[]
 uavsradius=125.
-r=2*uavsradius
-r2=r+(0.5*r)
+r=8*uavsradius
+r2=r+(2*r)
 delta=50.
-nrelaxed=75
+nrelaxed=350
 nscattered=0
 targets=[]
 avrg=0.
 maxpercluster=0
 maxtourperrandom=100
-aFile="./outs/input_4_centroids_1000_1000_map.csv"
-'''
+#aFile="./outs/input_4_centroids_1000_1000_map.csv"
+
 
 
 def euclidiandistance(p1, p2):
@@ -67,6 +70,10 @@ def satisfyConstraints(newpoint, centroid_index):
 
 	return False
 
+
+
+#print(str(sys.argv[1]))
+aFile=str(sys.argv[1])
 
 
 with open(aFile) as f:

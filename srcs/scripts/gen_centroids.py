@@ -2,7 +2,7 @@ import random
 from random import randint
 import math
 
-
+'''
 delta=510
 crop=1250
 withinpointsdeviation=2750
@@ -11,18 +11,18 @@ allcentroids=[]
 centroidseed=[[235.699, 303.518]]
 x0,xinf=0.,10000.
 y0,yinf=0.,10000.
-
-
 '''
-delta=50
+
+
+delta=75
 crop=75
-withinpointsdeviation=490
+withinpointsdeviation=3950
 maxtours=30
 allcentroids=[]
 centroidseed=[[235.699, 303.518]]
-x0,xinf=0.,1000.
-y0,yinf=0.,1000.
-'''
+x0,xinf=0.,10000.
+y0,yinf=0.,10000.
+
 
 
 def euclidiandistance(p1, p2):

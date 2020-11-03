@@ -192,5 +192,10 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	}
 	fclose(fp);
 
+	fp=fopen("./out/growthruntime.csv","a");
+	fprintf(fp, "%d, %f, %lu, %lu, %lu, %f, %f\n",
+		inputdata::nbr_grnds, lb, n_clustering, n_scp, final_graph->uavs_.size(), sum, time_spent);
+	fclose(fp);
+
 	return 0;
 }
