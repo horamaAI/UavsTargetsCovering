@@ -13,6 +13,18 @@ x0,xinf=0.,10000.
 y0,yinf=0.,10000.
 
 
+'''
+delta=50
+crop=75
+withinpointsdeviation=490
+maxtours=30
+allcentroids=[]
+centroidseed=[[235.699, 303.518]]
+x0,xinf=0.,1000.
+y0,yinf=0.,1000.
+'''
+
+
 def euclidiandistance(p1, p2):
 	return math.sqrt((p1[0]-p2[0])**2 + (p1[1]-p2[1])**2)
 
@@ -27,7 +39,7 @@ def satisfyConstraint(aPoint):
 
 for i in range(10) :
 	for j in range(10) :
-		if random.randint(0,1) > 0.2:
+		if random.randint(0,1) > 0.2:# give a chance to skip some range
 			continue
 		for k in range(len(centroidseed)):
 			tours = 0
