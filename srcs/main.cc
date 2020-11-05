@@ -160,11 +160,11 @@ printf("In main res size : %lu\n", res->size());
 	// used for restrictions
 	stack<tuple<unsigned long int, unsigned long int>>* edges_for_restrictions
 		=new stack<tuple<unsigned long int, unsigned long int>>;
-	vector<int> uavsccs;// indices of uavs used to link sparse connected components, empty at start
+	vector<int> *uavsccs=new vector<int>;// indices of uavs used to link sparse connected components, empty at start
 	igraph_t* solG0=nullptr;
 
 //	populate(net, uavscoverage, &uavsccs, range, solG0, edges_for_restrictions);
-	final_graph->populate(&uavsccs, range, solG0, edges_for_restrictions);
+	final_graph->populate(uavsccs, range, solG0, edges_for_restrictions);
 
 cerr<<"Of initial number of generated positions :"<<n_clustering<<endl;
 cerr<<"number of activated uavs before populating :"<<lp_covers_solution->size()<<endl;
@@ -204,6 +204,8 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	fprintf(fp, "%d, %f, %lu, %lu, %lu, %f, %f\n",
 		inputdata::nbr_grnds, lb, n_clustering, n_scp, final_graph->uavs_.size(), sum, time_spent);
 	fclose(fp);
+
+cout<<"THE END"<<endl;
 
 	return 0;
 }
