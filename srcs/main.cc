@@ -26,6 +26,14 @@ int main(int argc, const char* argv[])
 	}
 
 	clock_t begin = clock();
+	clock_t begin1stphase;
+	clock_t beginLPProblem;
+	clock_t beginCCphase;
+
+	clock_t end = clock();
+	clock_t end1stphase;
+	clock_t endLPProblem;
+	clock_t endCCphase;
 
 	/* !!! igraph : turn on attribute handling  Ie. even if you don't manipulate attributes explicitly, but create a graph that might have some attributes, eg. read a graph a GraphML file, you need this call before, otherwise the attributes are dropped. */
 	igraph_i_set_attribute_table(&igraph_cattribute_table);
@@ -40,7 +48,10 @@ int main(int argc, const char* argv[])
 
 	//translate(res, radius);
 
+	begin1stphase = clock();
 	vector<double*>* res = elbow();
+	end1stphase = clock();
+
 	n_clustering=res->size();
 
 printf("In main res size : %lu\n", res->size());
@@ -82,7 +93,9 @@ printf("In main res size : %lu\n", res->size());
 	res=nullptr;
 
 	// linear solver returns tuples of 1. indices of uavs active for coverage, and 2. the results of their linear program values
+	beginLPProblem = clock();
 	map<int,double>* lp_covers_solution=glpk_solve_linear_model(rawsln, range, lb);
+	endLPProblem = clock();
 
 
 	// store results of mip solver
@@ -164,7 +177,9 @@ printf("In main res size : %lu\n", res->size());
 	igraph_t* solG0=nullptr;
 
 //	populate(net, uavscoverage, &uavsccs, range, solG0, edges_for_restrictions);
+	beginCCphase = clock();
 	final_graph->populate(uavsccs, range, solG0, edges_for_restrictions);
+	endCCphase = clock();
 
 cerr<<"Of initial number of generated positions :"<<n_clustering<<endl;
 cerr<<"number of activated uavs before populating :"<<lp_covers_solution->size()<<endl;
@@ -174,8 +189,12 @@ for(int i=0; i<inputdata::nbr_grnds; i++)
 sum+=final_graph->gcovs_[i].size();
 cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 
-	clock_t end = clock();
+	end = clock();
+
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+	double time_spent_1st_phase = (double)(end1stphase - begin1stphase) / CLOCKS_PER_SEC;
+	double time_spent_lp_prblm = (double)(endLPProblem - beginLPProblem) / CLOCKS_PER_SEC;
+	double time_spent_cc_phase = (double)(endCCphase - beginCCphase) / CLOCKS_PER_SEC;
 	printf("|Time spent %f\n",time_spent);
 
 //	Store the coordinates of uavs used for connectivity
@@ -199,11 +218,16 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	sprintf(buff, "%d_targets.csv", inputdata::nbr_grnds);
 	strcat(path,buff);
 	fp=fopen(path,"a");
-
+cout<<"Content !!! "<<final_graph->uavs_.size()<<endl;
+if(fp==NULL)
+cout<<"FAILED !!! "<<path<<endl;
 	//fp=fopen("./out/runtime_growth/runtime.csv","a");
 	fprintf(fp, "%d, %f, %lu, %lu, %lu, %f, %f\n",
 		inputdata::nbr_grnds, lb, n_clustering, n_scp, final_graph->uavs_.size(), sum, time_spent);
 	fclose(fp);
+
+	cout<<time_spent<<" "<<time_spent_1st_phase<<", >>"<<time_spent_lp_prblm<<", >>"<<time_spent_cc_phase<<endl;
+
 
 cout<<"THE END"<<endl;
 
