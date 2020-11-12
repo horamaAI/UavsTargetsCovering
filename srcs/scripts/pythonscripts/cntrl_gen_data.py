@@ -1,7 +1,7 @@
 
 import global_vbles
 
-with open("../params") as f:
+with open(global_vbles.param_file) as f:
 	lines=f.readlines()
 	gen_centroids_lines=lines[1:8]
 	gen_large_data_lines=lines[10:22]

@@ -5,6 +5,11 @@ import math
 import sys
 
 import global_vbles
+
+
+global_vbles.param_file=sys.argv[1]
+
+
 import gen_centroids
 
 alldata=[]

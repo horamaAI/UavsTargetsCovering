@@ -1,4 +1,7 @@
 
+param_file=""
+
+
 # gen centroids
 delta=0
 crop=0
