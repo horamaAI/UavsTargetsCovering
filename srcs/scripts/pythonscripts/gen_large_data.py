@@ -13,7 +13,7 @@ global_vbles.param_file=sys.argv[1]
 import gen_centroids
 
 alldata=[]
-centroids=[]
+#centroids=[]
 targets=[]
 
 
@@ -73,11 +73,11 @@ def satisfyConstraints(newpoint, centroid_index):
 		return False
 
 	# inside a cluster
-	if euclidiandistance(newpoint, centroids[centroid_index]) < global_vbles.r:
+	if euclidiandistance(newpoint, global_vbles.centroids[centroid_index]) < global_vbles.r:
 		return True
 
 	# in allowed relaxation
-	if ( ( euclidiandistance(newpoint, centroids[centroid_index]) < global_vbles.r2 ) and global_vbles.nrelaxed > 0 ):
+	if ( ( euclidiandistance(newpoint, global_vbles.centroids[centroid_index]) < global_vbles.r2 ) and global_vbles.nrelaxed > 0 ):
 		global_vbles.nrelaxed -= 1
 		return True
 
@@ -89,11 +89,11 @@ def satisfyConstraints(newpoint, centroid_index):
 #global_vbles.aFile=str(sys.argv[1])
 
 
-with open(global_vbles.aFile) as f:
-	lines=f.readlines()
-	for x in lines :
-		row=x.rstrip('\n').split(',')
-		centroids.append([float(row[0]),float(row[1])])
+#with open(global_vbles.aFile) as f:
+#	lines=f.readlines()
+#	for x in lines :
+#		row=x.rstrip('\n').split(',')
+#		centroids.append([float(row[0]),float(row[1])])
 
 for i in range(global_vbles.nscattered):
 	aPoint=[0., 0.]
@@ -102,11 +102,11 @@ for i in range(global_vbles.nscattered):
 	targets.append(aPoint)# round to 2nd member decimal
 
 capital=global_vbles.ntargets-global_vbles.nscattered
-maxpercluster=global_vbles.ntargets/(len(centroids))
-in_centroids_counter=[0 for i in range(len(centroids))]
+maxpercluster=global_vbles.ntargets/(len(global_vbles.centroids))
+in_centroids_counter=[0 for i in range(len(global_vbles.centroids))]
 
 while capital > 0 :
-	for i in range(len(centroids)) :
+	for i in range(len(global_vbles.centroids)) :
 		if capital <=0:
 			break
 		tours = 0
@@ -116,8 +116,10 @@ while capital > 0 :
 			tours += 1
 			#print(round(random.uniform(-xinf,xinf),3))
 			aPoint=[0., 0.]
-			aPoint[0]=round(random.uniform(centroids[i][0]-global_vbles.r2, centroids[i][0]+global_vbles.r2),3)
-			aPoint[1]=round(random.uniform(centroids[i][1]-global_vbles.r2, centroids[i][1]+global_vbles.r2),3)
+			aPoint[0]=round(random.uniform(global_vbles.centroids[i][0]-global_vbles.r2
+				, global_vbles.centroids[i][0]+global_vbles.r2),3)
+			aPoint[1]=round(random.uniform(global_vbles.centroids[i][1]-global_vbles.r2
+				, global_vbles.centroids[i][1]+global_vbles.r2),3)
 			result = satisfyConstraints(aPoint, i)
 			if result:
 				targets.append(aPoint)# round to 2nd member decimal
@@ -137,5 +139,11 @@ f.write(str(global_vbles.xinf)+","+str(global_vbles.yinf)+"\n")# size of map
 for point in targets :
 	f.write(str(point[0])+","+str(point[1])+"\n")
 	f2.write(str(point[0])+","+str(point[1])+"\n")
+
+f.close()
+
+f=open("../outs/"+str(global_vbles.ntargets)+"_grounds_"+str(len(global_vbles.centroids))+"_centroids.csv","w")
+for point in global_vbles.centroids :
+	f.write(str(point[0])+","+str(point[1])+"\n")
 
 f.close()

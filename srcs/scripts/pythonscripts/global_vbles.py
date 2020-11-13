@@ -8,6 +8,7 @@ crop=0
 withinpointsdeviation=0
 maxtours=0
 centroidseed=[[]]
+centroids=[]
 x0=0
 xinf=0
 y0=0
@@ -31,4 +32,4 @@ maxpercluster=0
 maxtourperrandom=0
 
 # output file for centroids
-aFile=""
+# aFile=""

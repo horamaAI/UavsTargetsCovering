@@ -5,8 +5,6 @@ import math
 import global_vbles
 import cntrl_gen_data
 
-allcentroids=[]
-
 '''
 delta=510
 crop=1250
@@ -38,7 +36,7 @@ def satisfyConstraint(aPoint):
 	if(aPoint[0]<global_vbles.crop or aPoint[0]>global_vbles.xinf-global_vbles.crop
 		or aPoint[1]<global_vbles.crop or aPoint[1]>global_vbles.yinf-global_vbles.crop):
 		return False
-	for centroid in allcentroids:
+	for centroid in global_vbles.centroids:
 		if euclidiandistance(aPoint, centroid) < global_vbles.withinpointsdeviation:
 			return False
 	return True
@@ -59,15 +57,15 @@ for i in range(10) :
 					+global_vbles.centroidseed[k][0]+random.uniform(-global_vbles.yinf,global_vbles.yinf),3)
 
 				if satisfyConstraint(aPoint):
-					allcentroids.append(aPoint)# round to 2nd member decimal
+					global_vbles.centroids.append(aPoint)# round to 2nd member decimal
 					break
 
-global_vbles.aFile="../outs/input_"+str(len(allcentroids))+"_centroids_"+str(int(global_vbles.xinf))+"_"\
-	+str(int(global_vbles.yinf))+"_map.csv"
+#global_vbles.aFile="../outs/input_"+str(len(global_vbles.centroids))+"_centroids_"+str(int(global_vbles.xinf))+"_"\
+#	+str(int(global_vbles.yinf))+"_map.csv"
 
-f=open(global_vbles.aFile,"w")
+#f=open(global_vbles.aFile,"w")
 
-for point in allcentroids :
-	f.write(str(point[0])+","+str(point[1])+"\n")
+#for point in allcentroids :
+#	f.write(str(point[0])+","+str(point[1])+"\n")
 
-f.close()
+#f.close()
