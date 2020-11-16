@@ -1,7 +1,7 @@
 Problem:    set cover
-Rows:       850
-Columns:    580
-Non-zeros:  48701
+Rows:       1000
+Columns:    420
+Non-zeros:  45101
 Status:     UNDEFINED
 Objective:  0 (MINimum)
 
@@ -857,6 +857,156 @@ Objective:  0 (MINimum)
    848 r848         B              0             1               
    849 r849         B              0             1               
    850 r850         B              0             1               
+   851 r851         B              0             1               
+   852 r852         B              0             1               
+   853 r853         B              0             1               
+   854 r854         B              0             1               
+   855 r855         B              0             1               
+   856 r856         B              0             1               
+   857 r857         B              0             1               
+   858 r858         B              0             1               
+   859 r859         B              0             1               
+   860 r860         B              0             1               
+   861 r861         B              0             1               
+   862 r862         B              0             1               
+   863 r863         B              0             1               
+   864 r864         B              0             1               
+   865 r865         B              0             1               
+   866 r866         B              0             1               
+   867 r867         B              0             1               
+   868 r868         B              0             1               
+   869 r869         B              0             1               
+   870 r870         B              0             1               
+   871 r871         B              0             1               
+   872 r872         B              0             1               
+   873 r873         B              0             1               
+   874 r874         B              0             1               
+   875 r875         B              0             1               
+   876 r876         B              0             1               
+   877 r877         B              0             1               
+   878 r878         B              0             1               
+   879 r879         B              0             1               
+   880 r880         B              0             1               
+   881 r881         B              0             1               
+   882 r882         B              0             1               
+   883 r883         B              0             1               
+   884 r884         B              0             1               
+   885 r885         B              0             1               
+   886 r886         B              0             1               
+   887 r887         B              0             1               
+   888 r888         B              0             1               
+   889 r889         B              0             1               
+   890 r890         B              0             1               
+   891 r891         B              0             1               
+   892 r892         B              0             1               
+   893 r893         B              0             1               
+   894 r894         B              0             1               
+   895 r895         B              0             1               
+   896 r896         B              0             1               
+   897 r897         B              0             1               
+   898 r898         B              0             1               
+   899 r899         B              0             1               
+   900 r900         B              0             1               
+   901 r901         B              0             1               
+   902 r902         B              0             1               
+   903 r903         B              0             1               
+   904 r904         B              0             1               
+   905 r905         B              0             1               
+   906 r906         B              0             1               
+   907 r907         B              0             1               
+   908 r908         B              0             1               
+   909 r909         B              0             1               
+   910 r910         B              0             1               
+   911 r911         B              0             1               
+   912 r912         B              0             1               
+   913 r913         B              0             1               
+   914 r914         B              0             1               
+   915 r915         B              0             1               
+   916 r916         B              0             1               
+   917 r917         B              0             1               
+   918 r918         B              0             1               
+   919 r919         B              0             1               
+   920 r920         B              0             1               
+   921 r921         B              0             1               
+   922 r922         B              0             1               
+   923 r923         B              0             1               
+   924 r924         B              0             1               
+   925 r925         B              0             1               
+   926 r926         B              0             1               
+   927 r927         B              0             1               
+   928 r928         B              0             1               
+   929 r929         B              0             1               
+   930 r930         B              0             1               
+   931 r931         B              0             1               
+   932 r932         B              0             1               
+   933 r933         B              0             1               
+   934 r934         B              0             1               
+   935 r935         B              0             1               
+   936 r936         B              0             1               
+   937 r937         B              0             1               
+   938 r938         B              0             1               
+   939 r939         B              0             1               
+   940 r940         B              0             1               
+   941 r941         B              0             1               
+   942 r942         B              0             1               
+   943 r943         B              0             1               
+   944 r944         B              0             1               
+   945 r945         B              0             1               
+   946 r946         B              0             1               
+   947 r947         B              0             1               
+   948 r948         B              0             1               
+   949 r949         B              0             1               
+   950 r950         B              0             1               
+   951 r951         B              0             1               
+   952 r952         B              0             1               
+   953 r953         B              0             1               
+   954 r954         B              0             1               
+   955 r955         B              0             1               
+   956 r956         B              0             1               
+   957 r957         B              0             1               
+   958 r958         B              0             1               
+   959 r959         B              0             1               
+   960 r960         B              0             1               
+   961 r961         B              0             1               
+   962 r962         B              0             1               
+   963 r963         B              0             1               
+   964 r964         B              0             1               
+   965 r965         B              0             1               
+   966 r966         B              0             1               
+   967 r967         B              0             1               
+   968 r968         B              0             1               
+   969 r969         B              0             1               
+   970 r970         B              0             1               
+   971 r971         B              0             1               
+   972 r972         B              0             1               
+   973 r973         B              0             1               
+   974 r974         B              0             1               
+   975 r975         B              0             1               
+   976 r976         B              0             1               
+   977 r977         B              0             1               
+   978 r978         B              0             1               
+   979 r979         B              0             1               
+   980 r980         B              0             1               
+   981 r981         B              0             1               
+   982 r982         B              0             1               
+   983 r983         B              0             1               
+   984 r984         B              0             1               
+   985 r985         B              0             1               
+   986 r986         B              0             1               
+   987 r987         B              0             1               
+   988 r988         B              0             1               
+   989 r989         B              0             1               
+   990 r990         B              0             1               
+   991 r991         B              0             1               
+   992 r992         B              0             1               
+   993 r993         B              0             1               
+   994 r994         B              0             1               
+   995 r995         B              0             1               
+   996 r996         B              0             1               
+   997 r997         B              0             1               
+   998 r998         B              0             1               
+   999 r999         B              0             1               
+  1000 r1000        B              0             1               
 
    No. Column name  St   Activity     Lower bound   Upper bound    Marginal
 ------ ------------ -- ------------- ------------- ------------- -------------
@@ -1280,166 +1430,6 @@ Objective:  0 (MINimum)
    418 x418         NL             0             0             1         < eps
    419 x419         NL             0             0             1         < eps
    420 x420         NL             0             0             1         < eps
-   421 x421         NL             0             0             1         < eps
-   422 x422         NL             0             0             1         < eps
-   423 x423         NL             0             0             1         < eps
-   424 x424         NL             0             0             1         < eps
-   425 x425         NL             0             0             1         < eps
-   426 x426         NL             0             0             1         < eps
-   427 x427         NL             0             0             1         < eps
-   428 x428         NL             0             0             1         < eps
-   429 x429         NL             0             0             1         < eps
-   430 x430         NL             0             0             1         < eps
-   431 x431         NL             0             0             1         < eps
-   432 x432         NL             0             0             1         < eps
-   433 x433         NL             0             0             1         < eps
-   434 x434         NL             0             0             1         < eps
-   435 x435         NL             0             0             1         < eps
-   436 x436         NL             0             0             1         < eps
-   437 x437         NL             0             0             1         < eps
-   438 x438         NL             0             0             1         < eps
-   439 x439         NL             0             0             1         < eps
-   440 x440         NL             0             0             1         < eps
-   441 x441         NL             0             0             1         < eps
-   442 x442         NL             0             0             1         < eps
-   443 x443         NL             0             0             1         < eps
-   444 x444         NL             0             0             1         < eps
-   445 x445         NL             0             0             1         < eps
-   446 x446         NL             0             0             1         < eps
-   447 x447         NL             0             0             1         < eps
-   448 x448         NL             0             0             1         < eps
-   449 x449         NL             0             0             1         < eps
-   450 x450         NL             0             0             1         < eps
-   451 x451         NL             0             0             1         < eps
-   452 x452         NL             0             0             1         < eps
-   453 x453         NL             0             0             1         < eps
-   454 x454         NL             0             0             1         < eps
-   455 x455         NL             0             0             1         < eps
-   456 x456         NL             0             0             1         < eps
-   457 x457         NL             0             0             1         < eps
-   458 x458         NL             0             0             1         < eps
-   459 x459         NL             0             0             1         < eps
-   460 x460         NL             0             0             1         < eps
-   461 x461         NL             0             0             1         < eps
-   462 x462         NL             0             0             1         < eps
-   463 x463         NL             0             0             1         < eps
-   464 x464         NL             0             0             1         < eps
-   465 x465         NL             0             0             1         < eps
-   466 x466         NL             0             0             1         < eps
-   467 x467         NL             0             0             1         < eps
-   468 x468         NL             0             0             1         < eps
-   469 x469         NL             0             0             1         < eps
-   470 x470         NL             0             0             1         < eps
-   471 x471         NL             0             0             1         < eps
-   472 x472         NL             0             0             1         < eps
-   473 x473         NL             0             0             1         < eps
-   474 x474         NL             0             0             1         < eps
-   475 x475         NL             0             0             1         < eps
-   476 x476         NL             0             0             1         < eps
-   477 x477         NL             0             0             1         < eps
-   478 x478         NL             0             0             1         < eps
-   479 x479         NL             0             0             1         < eps
-   480 x480         NL             0             0             1         < eps
-   481 x481         NL             0             0             1         < eps
-   482 x482         NL             0             0             1         < eps
-   483 x483         NL             0             0             1         < eps
-   484 x484         NL             0             0             1         < eps
-   485 x485         NL             0             0             1         < eps
-   486 x486         NL             0             0             1         < eps
-   487 x487         NL             0             0             1         < eps
-   488 x488         NL             0             0             1         < eps
-   489 x489         NL             0             0             1         < eps
-   490 x490         NL             0             0             1         < eps
-   491 x491         NL             0             0             1         < eps
-   492 x492         NL             0             0             1         < eps
-   493 x493         NL             0             0             1         < eps
-   494 x494         NL             0             0             1         < eps
-   495 x495         NL             0             0             1         < eps
-   496 x496         NL             0             0             1         < eps
-   497 x497         NL             0             0             1         < eps
-   498 x498         NL             0             0             1         < eps
-   499 x499         NL             0             0             1         < eps
-   500 x500         NL             0             0             1         < eps
-   501 x501         NL             0             0             1         < eps
-   502 x502         NL             0             0             1         < eps
-   503 x503         NL             0             0             1         < eps
-   504 x504         NL             0             0             1         < eps
-   505 x505         NL             0             0             1         < eps
-   506 x506         NL             0             0             1         < eps
-   507 x507         NL             0             0             1         < eps
-   508 x508         NL             0             0             1         < eps
-   509 x509         NL             0             0             1         < eps
-   510 x510         NL             0             0             1         < eps
-   511 x511         NL             0             0             1         < eps
-   512 x512         NL             0             0             1         < eps
-   513 x513         NL             0             0             1         < eps
-   514 x514         NL             0             0             1         < eps
-   515 x515         NL             0             0             1         < eps
-   516 x516         NL             0             0             1         < eps
-   517 x517         NL             0             0             1         < eps
-   518 x518         NL             0             0             1         < eps
-   519 x519         NL             0             0             1         < eps
-   520 x520         NL             0             0             1         < eps
-   521 x521         NL             0             0             1         < eps
-   522 x522         NL             0             0             1         < eps
-   523 x523         NL             0             0             1         < eps
-   524 x524         NL             0             0             1         < eps
-   525 x525         NL             0             0             1         < eps
-   526 x526         NL             0             0             1         < eps
-   527 x527         NL             0             0             1         < eps
-   528 x528         NL             0             0             1         < eps
-   529 x529         NL             0             0             1         < eps
-   530 x530         NL             0             0             1         < eps
-   531 x531         NL             0             0             1         < eps
-   532 x532         NL             0             0             1         < eps
-   533 x533         NL             0             0             1         < eps
-   534 x534         NL             0             0             1         < eps
-   535 x535         NL             0             0             1         < eps
-   536 x536         NL             0             0             1         < eps
-   537 x537         NL             0             0             1         < eps
-   538 x538         NL             0             0             1         < eps
-   539 x539         NL             0             0             1         < eps
-   540 x540         NL             0             0             1         < eps
-   541 x541         NL             0             0             1         < eps
-   542 x542         NL             0             0             1         < eps
-   543 x543         NL             0             0             1         < eps
-   544 x544         NL             0             0             1         < eps
-   545 x545         NL             0             0             1         < eps
-   546 x546         NL             0             0             1         < eps
-   547 x547         NL             0             0             1         < eps
-   548 x548         NL             0             0             1         < eps
-   549 x549         NL             0             0             1         < eps
-   550 x550         NL             0             0             1         < eps
-   551 x551         NL             0             0             1         < eps
-   552 x552         NL             0             0             1         < eps
-   553 x553         NL             0             0             1         < eps
-   554 x554         NL             0             0             1         < eps
-   555 x555         NL             0             0             1         < eps
-   556 x556         NL             0             0             1         < eps
-   557 x557         NL             0             0             1         < eps
-   558 x558         NL             0             0             1         < eps
-   559 x559         NL             0             0             1         < eps
-   560 x560         NL             0             0             1         < eps
-   561 x561         NL             0             0             1         < eps
-   562 x562         NL             0             0             1         < eps
-   563 x563         NL             0             0             1         < eps
-   564 x564         NL             0             0             1         < eps
-   565 x565         NL             0             0             1         < eps
-   566 x566         NL             0             0             1         < eps
-   567 x567         NL             0             0             1         < eps
-   568 x568         NL             0             0             1         < eps
-   569 x569         NL             0             0             1         < eps
-   570 x570         NL             0             0             1         < eps
-   571 x571         NL             0             0             1         < eps
-   572 x572         NL             0             0             1         < eps
-   573 x573         NL             0             0             1         < eps
-   574 x574         NL             0             0             1         < eps
-   575 x575         NL             0             0             1         < eps
-   576 x576         NL             0             0             1         < eps
-   577 x577         NL             0             0             1         < eps
-   578 x578         NL             0             0             1         < eps
-   579 x579         NL             0             0             1         < eps
-   580 x580         NL             0             0             1         < eps
 
 Karush-Kuhn-Tucker optimality conditions:
 

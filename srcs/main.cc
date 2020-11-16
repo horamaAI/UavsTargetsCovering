@@ -212,9 +212,26 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	// write into file to save memory
 	char path[30];
 	char buff[30];
+
+	char target_folder[30];
+	char *trgt_split=(char*)malloc(30);
+	strcpy(trgt_split, argv[1]);
+	strtok(trgt_split, "/");
+
+	while(trgt_split!=NULL){
+		strcpy(target_folder, buff);
+		strcpy(buff, trgt_split);
+		trgt_split=strtok(NULL, "/");
+	}
+
 	strcpy(path,"./out/runtime_growth/");
-	sprintf(buff, "%d_targets.csv", inputdata::nbr_grnds);
+
+	strcat(path, target_folder);
+
+	sprintf(buff, "/%d_targets.csv", inputdata::nbr_grnds);
+//	sprintf(buff, "%d_targets.csv", inputdata::nbr_grnds);
 	strcat(path,buff);
+
 	fp=fopen(path,"a");
 
 if(fp==NULL)
