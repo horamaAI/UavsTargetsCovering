@@ -1,3 +1,0 @@
-# n targts, min redund, phase 1 n centroids, phase 2 n coverages, final n uavs deployed, tot redundancy, runtime, time_spent_1st_phase, time_spent_lp_prblm, time_spent_cc_phase
-50, 1.000000, 41, 22, 41, 126.000000, 0.008269, 0.002023, 0.002683, 0.001821
-50, 1.000000, 41, 22, 41, 126.000000, 0.004713, 0.001037, 0.001406, 0.001249
