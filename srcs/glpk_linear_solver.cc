@@ -123,6 +123,11 @@ printf("RANGE %f, lb %f\n",range,lb);
 cerr<<"result_solver2 == "<<result_solver2<<endl;
 //	z = glp_get_obj_val(lp);
 	z = glp_mip_obj_val(lp);
+
+	if(glp_mip_status(lp)!=GLP_OPT){
+		cout<<"Optimal solution not reached"<<endl;
+		exit(1);
+	}
 	
 	/* Gather results */
 	map<int,double> *soln=new map<int,double>;
