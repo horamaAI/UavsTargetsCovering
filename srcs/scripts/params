@@ -1,0 +1,22 @@
+# gen centroids
+delta=75
+crop=75
+withinpointsdeviation=127
+maxtours=30
+centroidseed=235.699,303.518
+x0,xinf=0,500
+y0,yinf=0,500
+
+# gen large data
+dim=2
+x0,xinf=0,700
+y0,yinf=0,700
+ntargets=1000
+uavsradius=125
+r=2
+r2=0.6
+delta=50
+nrelaxed=350
+nscattered=0
+maxpercluster=0
+maxtourperrandom=100
