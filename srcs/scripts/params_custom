@@ -1,16 +1,16 @@
 # gen centroids
 delta=75
-crop=75
-withinpointsdeviation=725
+crop=400
+withinpointsdeviation=255
 maxtours=30
 centroidseed=235.699,303.518
-x0,xinf=0,3500
-y0,yinf=0,3500
+x0,xinf=0,2400
+y0,yinf=0,2400
 
 # gen large data
 dim=2
-x0,xinf=0,3500
-y0,yinf=0,3500
+x0,xinf=0,2400
+y0,yinf=0,2400
 ntargets=1000
 uavsradius=125
 r=1.5

@@ -9,6 +9,12 @@ import global_vbles
 
 global_vbles.param_file=sys.argv[1]
 
+for ele in sys.argv:
+	print("hello "+ele)
+
+output_folder=sys.argv[2]
+
+
 
 import gen_centroids
 
@@ -97,12 +103,17 @@ def satisfyConstraints(newpoint, centroid_index):
 
 for i in range(global_vbles.nscattered):
 	aPoint=[0., 0.]
-	aPoint[0]=round(random.uniform(global_vbles.x0+1300, global_vbles.xinf-1300),3)
-	aPoint[1]=round(random.uniform(global_vbles.x0+3300, global_vbles.xinf-3300),3)
+	aPoint[0]=round(random.uniform(global_vbles.x0 + global_vbles.crop, global_vbles.xinf - global_vbles.crop),3)
+	aPoint[1]=round(random.uniform(global_vbles.x0 + global_vbles.crop, global_vbles.xinf - global_vbles.crop),3)
 	targets.append(aPoint)# round to 2nd member decimal
 
 capital=global_vbles.ntargets-global_vbles.nscattered
-maxpercluster=global_vbles.ntargets/(len(global_vbles.centroids))
+
+if len(global_vbles.centroids) < 1:
+	maxpercluster=global_vbles.ntargets
+else :
+	maxpercluster=global_vbles.ntargets/(len(global_vbles.centroids))
+
 in_centroids_counter=[0 for i in range(len(global_vbles.centroids))]
 
 while capital > 0 :
@@ -129,8 +140,8 @@ while capital > 0 :
 
 	
 
-f=open("../outs/"+str(global_vbles.ntargets)+"_grounds.csv","w")
-f2=open("../outs/"+str(global_vbles.ntargets)+"_grounds_coords.csv","w")
+f=open("../outs/"+output_folder+"/"+str(global_vbles.ntargets)+"_grounds.csv","w")
+f2=open("../outs/"+output_folder+"/"+str(global_vbles.ntargets)+"_grounds_coords.csv","w")
 f.write(str(18)+"\n")# to correct, at stage useless, depicts number of available uavs
 f.write(str(125)+"\n")# uavs range
 f.write(str(global_vbles.ntargets)+"\n")# number of ground targets
@@ -142,7 +153,7 @@ for point in targets :
 
 f.close()
 
-f=open("../outs/"+str(global_vbles.ntargets)+"_grounds_"+str(len(global_vbles.centroids))+"_centroids.csv","w")
+f=open("../outs/"+output_folder+"/"+str(global_vbles.ntargets)+"_grounds_"+str(len(global_vbles.centroids))+"_centroids.csv","w")
 for point in global_vbles.centroids :
 	f.write(str(point[0])+","+str(point[1])+"\n")
 

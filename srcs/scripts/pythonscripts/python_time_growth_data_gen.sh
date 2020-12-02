@@ -13,25 +13,27 @@ y0=0
 xinf=200
 yinf=200
 
-base=0
+targets=(set1_1000_1000_map set2_1500_1500_map set3_2000_2000_map set4_2500_2500_map set5_3000_3000_map set6_3500_3500_map)
+
+baselimit=0
 
 # 6 sets of "spreadness"
 for j in {1..6}
 do
 
-    base=200*j
+    baselimit=200*j
 
     # for all 20 instances: from 50 targets to 1000
     for i in {1..20}
     do
 
-        xinf=base+(i*50)
-        yinf=base+(i*50)
+        xinf=$(( $baselimit + $(( $(( $i*50 )) + $(( $(( $j*50 )) - 100 )) )) ))
+        yinf=$(( $baselimit + $(( $(( $i*50 )) + $(( $(( $j*50 )) - 100 )) )) ))
 
         printf "# gen centroids\n" > ../params_custom
         printf "delta="75"\n" >> ../params_custom
-        printf "crop="75"\n" >> ../params_custom
-        printf "withinpointsdeviation=$((125+($i*30)))\n" >> ../params_custom
+        printf "crop=$(($i*20))\n" >> ../params_custom
+        printf "withinpointsdeviation=$((125+($i*5)+($j*5)))\n" >> ../params_custom
         printf "maxtours="30"\n" >> ../params_custom
         printf "centroidseed="235.699","303.518"\n" >> ../params_custom
         printf "x0,xinf=$x0,$xinf\n" >> ../params_custom
@@ -52,7 +54,7 @@ do
         printf "maxtourperrandom="100"\n" >> ../params_custom
 
         # generate input data from previous parameters
-        python3 gen_large_data.py ../params_custom
+        python3 gen_large_data.py ../params_custom ${targets[$j-1]}
 
     done
 

@@ -1,7 +1,7 @@
 Problem:    set cover
-Rows:       1000
-Columns:    968
-Non-zeros:  2326
+Rows:       950
+Columns:    898
+Non-zeros:  10734
 Status:     UNDEFINED
 Objective:  0 (MINimum)
 
@@ -957,56 +957,6 @@ Objective:  0 (MINimum)
    948 r948         B              0             1               
    949 r949         B              0             1               
    950 r950         B              0             1               
-   951 r951         B              0             1               
-   952 r952         B              0             1               
-   953 r953         B              0             1               
-   954 r954         B              0             1               
-   955 r955         B              0             1               
-   956 r956         B              0             1               
-   957 r957         B              0             1               
-   958 r958         B              0             1               
-   959 r959         B              0             1               
-   960 r960         B              0             1               
-   961 r961         B              0             1               
-   962 r962         B              0             1               
-   963 r963         B              0             1               
-   964 r964         B              0             1               
-   965 r965         B              0             1               
-   966 r966         B              0             1               
-   967 r967         B              0             1               
-   968 r968         B              0             1               
-   969 r969         B              0             1               
-   970 r970         B              0             1               
-   971 r971         B              0             1               
-   972 r972         B              0             1               
-   973 r973         B              0             1               
-   974 r974         B              0             1               
-   975 r975         B              0             1               
-   976 r976         B              0             1               
-   977 r977         B              0             1               
-   978 r978         B              0             1               
-   979 r979         B              0             1               
-   980 r980         B              0             1               
-   981 r981         B              0             1               
-   982 r982         B              0             1               
-   983 r983         B              0             1               
-   984 r984         B              0             1               
-   985 r985         B              0             1               
-   986 r986         B              0             1               
-   987 r987         B              0             1               
-   988 r988         B              0             1               
-   989 r989         B              0             1               
-   990 r990         B              0             1               
-   991 r991         B              0             1               
-   992 r992         B              0             1               
-   993 r993         B              0             1               
-   994 r994         B              0             1               
-   995 r995         B              0             1               
-   996 r996         B              0             1               
-   997 r997         B              0             1               
-   998 r998         B              0             1               
-   999 r999         B              0             1               
-  1000 r1000        B              0             1               
 
    No. Column name  St   Activity     Lower bound   Upper bound    Marginal
 ------ ------------ -- ------------- ------------- ------------- -------------
@@ -1908,76 +1858,6 @@ Objective:  0 (MINimum)
    896 x896         NL             0             0             1         < eps
    897 x897         NL             0             0             1         < eps
    898 x898         NL             0             0             1         < eps
-   899 x899         NL             0             0             1         < eps
-   900 x900         NL             0             0             1         < eps
-   901 x901         NL             0             0             1         < eps
-   902 x902         NL             0             0             1         < eps
-   903 x903         NL             0             0             1         < eps
-   904 x904         NL             0             0             1         < eps
-   905 x905         NL             0             0             1         < eps
-   906 x906         NL             0             0             1         < eps
-   907 x907         NL             0             0             1         < eps
-   908 x908         NL             0             0             1         < eps
-   909 x909         NL             0             0             1         < eps
-   910 x910         NL             0             0             1         < eps
-   911 x911         NL             0             0             1         < eps
-   912 x912         NL             0             0             1         < eps
-   913 x913         NL             0             0             1         < eps
-   914 x914         NL             0             0             1         < eps
-   915 x915         NL             0             0             1         < eps
-   916 x916         NL             0             0             1         < eps
-   917 x917         NL             0             0             1         < eps
-   918 x918         NL             0             0             1         < eps
-   919 x919         NL             0             0             1         < eps
-   920 x920         NL             0             0             1         < eps
-   921 x921         NL             0             0             1         < eps
-   922 x922         NL             0             0             1         < eps
-   923 x923         NL             0             0             1         < eps
-   924 x924         NL             0             0             1         < eps
-   925 x925         NL             0             0             1         < eps
-   926 x926         NL             0             0             1         < eps
-   927 x927         NL             0             0             1         < eps
-   928 x928         NL             0             0             1         < eps
-   929 x929         NL             0             0             1         < eps
-   930 x930         NL             0             0             1         < eps
-   931 x931         NL             0             0             1         < eps
-   932 x932         NL             0             0             1         < eps
-   933 x933         NL             0             0             1         < eps
-   934 x934         NL             0             0             1         < eps
-   935 x935         NL             0             0             1         < eps
-   936 x936         NL             0             0             1         < eps
-   937 x937         NL             0             0             1         < eps
-   938 x938         NL             0             0             1         < eps
-   939 x939         NL             0             0             1         < eps
-   940 x940         NL             0             0             1         < eps
-   941 x941         NL             0             0             1         < eps
-   942 x942         NL             0             0             1         < eps
-   943 x943         NL             0             0             1         < eps
-   944 x944         NL             0             0             1         < eps
-   945 x945         NL             0             0             1         < eps
-   946 x946         NL             0             0             1         < eps
-   947 x947         NL             0             0             1         < eps
-   948 x948         NL             0             0             1         < eps
-   949 x949         NL             0             0             1         < eps
-   950 x950         NL             0             0             1         < eps
-   951 x951         NL             0             0             1         < eps
-   952 x952         NL             0             0             1         < eps
-   953 x953         NL             0             0             1         < eps
-   954 x954         NL             0             0             1         < eps
-   955 x955         NL             0             0             1         < eps
-   956 x956         NL             0             0             1         < eps
-   957 x957         NL             0             0             1         < eps
-   958 x958         NL             0             0             1         < eps
-   959 x959         NL             0             0             1         < eps
-   960 x960         NL             0             0             1         < eps
-   961 x961         NL             0             0             1         < eps
-   962 x962         NL             0             0             1         < eps
-   963 x963         NL             0             0             1         < eps
-   964 x964         NL             0             0             1         < eps
-   965 x965         NL             0             0             1         < eps
-   966 x966         NL             0             0             1         < eps
-   967 x967         NL             0             0             1         < eps
-   968 x968         NL             0             0             1         < eps
 
 Karush-Kuhn-Tucker optimality conditions:
 
