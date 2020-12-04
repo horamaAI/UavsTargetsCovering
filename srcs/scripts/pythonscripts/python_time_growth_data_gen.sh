@@ -27,13 +27,19 @@ do
     for i in {1..20}
     do
 
-        xinf=$(( $baselimit + $(( $(( $i*50 )) + $(( $(( $j*50 )) - 100 )) )) ))
-        yinf=$(( $baselimit + $(( $(( $i*50 )) + $(( $(( $j*50 )) - 100 )) )) ))
+        xinf=$(( $baselimit + $(( $(( $i*20 )) + $(( $(( $j*30 )) )) )) ))
+        yinf=$(( $baselimit + $(( $(( $i*20 )) + $(( $(( $j*30 )) )) )) ))
 
         printf "# gen centroids\n" > ../params_custom
         printf "delta="75"\n" >> ../params_custom
-        printf "crop=$(($i*20))\n" >> ../params_custom
-        printf "withinpointsdeviation=$((125+($i*5)+($j*5)))\n" >> ../params_custom
+        printf "crop=$(($i*10))\n" >> ../params_custom
+
+        if [ $j -lt 4 ] && [ $i -lt 11 ]; then
+            printf "withinpointsdeviation=$((125+($i*5)+($j*10)))\n" >> ../params_custom
+        else
+            printf "withinpointsdeviation=$((125+($i*20)+($j*30)))\n" >> ../params_custom
+        fi
+
         printf "maxtours="30"\n" >> ../params_custom
         printf "centroidseed="235.699","303.518"\n" >> ../params_custom
         printf "x0,xinf=$x0,$xinf\n" >> ../params_custom
@@ -45,13 +51,24 @@ do
         printf "y0,yinf=$y0,$yinf\n" >> ../params_custom
         printf "ntargets=$(($i*50))\n" >> ../params_custom
         printf "uavsradius="125"\n" >> ../params_custom
-        printf "r="1.5"\n" >> ../params_custom
-        printf "r2="0.75"\n" >> ../params_custom
+        printf "r="`echo "scale=2; $j+$j/6+$i/20" | bc`"\n" >> ../params_custom
+        #printf "r=%.2f\n" "$((1.0+$((10**3 * $j/6))e-2))" >> ../params_custom
+        printf "r2=%.3f\n" "$(($((10**3 * $i/10))+$((10**3 * $j/6))))e-3" >> ../params_custom
         printf "delta="50"\n" >> ../params_custom
         printf "nrelaxed=$(($i*10))\n" >> ../params_custom
         printf "nscattered="0"\n" >> ../params_custom
         printf "maxpercluster="0"\n" >> ../params_custom
         printf "maxtourperrandom="100"\n" >> ../params_custom
+
+        # cat ../params_custom
+        echo $i", "$j", "$xinf", "$yinf
+        printf "r="`echo "scale=2; $j+$j/6+$i/20" | bc`"\n"
+        printf "r2=%.3f\n" "$(($((10**3 * $i/10))+$((10**3 * $j/6))))e-3"
+        if [ $j -lt 4 ] && [ $i -lt 11 ]; then
+            printf "part 1 : withinpointsdeviation=$((125+($i*5)+($j*10)))\n"
+        else
+            printf "part 2 : withinpointsdeviation=$((125+($i*20)+($j*30)))\n"
+        fi
 
         # generate input data from previous parameters
         python3 gen_large_data.py ../params_custom ${targets[$j-1]}
