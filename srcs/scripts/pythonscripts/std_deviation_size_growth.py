@@ -1,5 +1,7 @@
 
+import matplotlib.pyplot as plt
 import numpy as np
+
 
 targets=["set1_1000_1000_map", "set2_1500_1500_map", "set3_2000_2000_map", "set4_2500_2500_map", "set5_3000_3000_map",
 "set6_3500_3500_map"]
@@ -21,8 +23,15 @@ avrgstds=[[] for i in targets]
 for i in range(len(alldata)):
 	for j in range(len(alldata[i])):
 		avrgstds[i].append(np.std(alldata[i][j]))
-	#print("==============================\n")
 
-for row in avrgstds:
-	print(np.std(row))
-	print("==============================\n")
+#for row in avrgstds:
+#	print(len(row))
+#	print("==============================\n")
+
+fig = plt.figure(figsize=(10, 7))
+
+ax=fig.add_axes([0, 0, 1, 1])
+
+bp=ax.boxplot(avrgstds)
+
+plt.show()

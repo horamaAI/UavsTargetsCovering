@@ -4,17 +4,17 @@ crop=200
 withinpointsdeviation=705
 maxtours=30
 centroidseed=235.699,303.518
-x0,xinf=0,1780
-y0,yinf=0,1780
+x0,xinf=0,3100
+y0,yinf=0,3100
 
 # gen large data
 dim=2
-x0,xinf=0,1780
-y0,yinf=0,1780
+x0,xinf=0,3100
+y0,yinf=0,3100
 ntargets=1000
 uavsradius=125
-r=8.00
-r2=3.000
+r=2.32
+r2=2.000
 delta=50
 nrelaxed=200
 nscattered=0
