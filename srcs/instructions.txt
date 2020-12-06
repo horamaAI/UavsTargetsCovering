@@ -1,0 +1,19 @@
+
+1. To generate (random) input data (see folder "pythonscripts") :
+    1.1 run : python3 gen_large_data.py [parameter_file_path] [targets_folder], to create input data and store them into folder [targets_folder], and given parameters specified in [parameter_file_path].
+    1.2 run : ./python_time_growth_data_gen.sh , to execute the automatic different generations with parameters specified this time into the same file "python_time_growth_data_gen.sh"
+
+2. Run the main application (directly in folder "srcs") :
+    2.1 on one given input file : make, and then : ./a.out [input_data_path]. Note : the outputs are to be checked from cpp srcs files
+    2.2 on several predefined input files : run : ./large_automated_time_growth_tests.sh, or ./large_gaps_time_growth_tests.sh
+
+3. If performed 2.2 and run application on several automated files (see folder "pythonscripts") :
+    find the minimum runtime by running the python file "find_min_evol_growth":
+        python3 find_min_evol_growth.py
+        !! : DON'T FORGET TO CHANGE/SPECIFY the different specific input/ouptut files needed
+
+4. To find the standard deviation of a set of input data, run :
+    std_deviation_size_growth.py
+    which boxplot the IRQ of the set(s)
+
+5. To plot the runtime growth of the set, use gnuplot (see gnuplotscripts, file "plot_complete_graph.p")
