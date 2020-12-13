@@ -89,48 +89,15 @@ printf("In main res size : %lu\n", res->size());
 	delete res;//Housekeeping
 	res=nullptr;
 
-	// linear solver returns tuples of 1. indices of uavs active for coverage, and 2. the results of their linear program values
+	// linear solver returns tuples of: 1. indices of uavs active for coverage, and 2. the results of their linear program values
 	timeLPProblem = clock();
 	map<int,double>* lp_covers_solution=glpk_solve_linear_model(rawsln, range, lb);
 	timeLPProblem = clock()- timeLPProblem;
 
-
-	// store results of mip solver
-	FILE* fp;
-	fp=fopen("./out/activeuavs.csv","w");
-	for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
-	{
-		for (int j=0; j<inputdata::dim; j++)
-		{
-			// skip comma not needed after last dim value
-			fprintf(fp,"%lf", rawsln->uavs_[it->first][j]);
-			if(j==inputdata::dim-1)	fprintf(fp,"\n");
-			else	fprintf(fp,",");
-		}
-	}
-	fclose(fp);
-
-	// print in file connections uavs-ground nodes
-	fp=fopen("./out/uavs_grounds.csv","w");
-	int* activecovers = new int[inputdata::nbr_grnds];
-	for(int i=0; i<inputdata::nbr_grnds; i++)
-	{
-		activecovers[i]=0;
-		for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
-		{
-			int uavk=it->first;
-			if( euclDistance(rawsln->uavs_[uavk], inputdata::grnds[i]) <= range )
-			{
-				assert(rawsln->uav_in_cover(rawsln->gcovs_[i], uavk));// security safety, otherwise would be a problem
-				fprintf(fp,"%lf,%lf\n", inputdata::grnds[i][0], inputdata::grnds[i][1]);
-				fprintf(fp,"%lf,%lf\n\n", rawsln->uavs_[uavk][0], rawsln->uavs_[uavk][1]);
-				activecovers[i]++;
-			}
-		}
-	}
-
 	int max=0;
 	double sum=0;
+	int* activecovers = new int[inputdata::nbr_grnds];
+
 //	printf("Couples (ground, n active uavs covering it) : ");
 	for(int i=0; i<inputdata::nbr_grnds; i++)
 	{
@@ -193,11 +160,79 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	double time_spent_1st_phase = (double) time1stphase / CLOCKS_PER_SEC;
 	double time_spent_lp_prblm = (double) timeLPProblem / CLOCKS_PER_SEC;
 	double time_spent_CC = (double) timeCC / CLOCKS_PER_SEC;
-	printf("|Time spent %f\n",time_spent_overall);
+	printf("|Execution times overall :%f\n",time_spent_overall);
+	printf("|- 1st clustering phase :%f\n",time_spent_1st_phase);
+	printf("|- 2nd lp solver :%f\n",time_spent_lp_prblm);
+	printf("|- CC phase  :%f\n",time_spent_CC);
 
-//	Store the coordinates of uavs used for connectivity
-	fp=fopen("./out/uavs_connectivity.csv","w");
+	FILE* fp;
 
+	// write into file to save memory
+	char path[100];
+	char prefix[100];
+	char suffix[100];
+
+	char target_folder[100];
+	char *trgt_split=(char*)malloc(100);
+	strcpy(trgt_split, argv[1]);
+	strtok(trgt_split, "/");
+
+	while(trgt_split!=NULL){
+		// variable 'suffix' is used here only as a buffer
+		strcpy(target_folder, suffix);
+		strcpy(suffix, trgt_split);
+		trgt_split=strtok(NULL, "/");
+	}
+
+	strcpy(prefix, "./out/runtime_growth/");
+	strcat(prefix, target_folder);
+	strcat(prefix, "/");
+	sprintf(suffix, "%d_targets.csv", inputdata::nbr_grnds);
+/*
+cout << "VALUE TRGT FOLDER : " << target_folder << endl;
+cout << " PRFIX : " << prefix << endl;
+*/
+	strcpy(path, prefix);
+	strcat(path, suffix);
+/*
+cout << " SUFFIX : " << suffix << endl;
+cout << " PATH:" << path << endl;
+*/
+	fp=fopen(path,"a");
+
+if(fp==NULL)
+cout<<"FAILED !!! "<<path<<endl;
+
+	//fp=fopen("./out/runtime_growth/runtime.csv","a");
+	fprintf(fp, "%d, %f, %lu, %lu, %lu, %f, %f, %f, %f, %f\n",
+		inputdata::nbr_grnds, lb, n_clustering, n_scp, final_graph->uavs_.size(), sum
+		, time_spent_overall, time_spent_1st_phase, time_spent_lp_prblm, time_spent_CC);
+	fclose(fp);
+
+	// store results of mip solver
+	strcpy(path, prefix);
+	strcat(path, "mip_res_");
+	strcat(path, suffix);
+
+	fp=fopen(path,"w");
+	for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
+	{
+		for (int j=0; j<inputdata::dim; j++)
+		{
+			// skip comma not needed after last dim value
+			fprintf(fp,"%lf", rawsln->uavs_[it->first][j]);
+			if(j==inputdata::dim-1)	fprintf(fp,"\n");
+			else	fprintf(fp,",");
+		}
+	}
+	fclose(fp);
+
+	strcpy(path, prefix);
+	strcat(path, "ccs_");
+	strcat(path, suffix);
+
+	//	Store the coordinates of uavs used for connectivity
+	fp=fopen(path, "w");
 	for(unsigned long int i=n_scp; i<final_graph->uavs_.size(); i++)
 	{
 		for (int j=0; j<inputdata::dim; j++)
@@ -209,39 +244,28 @@ cerr<<"Final value of sum of each gcovs_[x]->size() = "<<sum<<endl;
 	}
 	fclose(fp);
 
-	// write into file to save memory
-	char path[30];
-	char buff[30];
+	// print in file connections uavs-ground nodes
+	strcpy(path, prefix);
+	strcat(path, "uavs_grounds_");
+	strcat(path, suffix);
 
-	char target_folder[30];
-	char *trgt_split=(char*)malloc(30);
-	strcpy(trgt_split, argv[1]);
-	strtok(trgt_split, "/");
+	fp=fopen(path, "w");
 
-	while(trgt_split!=NULL){
-		strcpy(target_folder, buff);
-		strcpy(buff, trgt_split);
-		trgt_split=strtok(NULL, "/");
+	for(int i=0; i<inputdata::nbr_grnds; i++)
+	{
+		activecovers[i]=0;
+		for(map<int,double>::iterator it=lp_covers_solution->begin(); it!=lp_covers_solution->end(); it++)
+		{
+			int uavk=it->first;
+			if( euclDistance(rawsln->uavs_[uavk], inputdata::grnds[i]) <= range )
+			{
+				assert(rawsln->uav_in_cover(rawsln->gcovs_[i], uavk));// security safety, otherwise would be a problem
+				fprintf(fp,"%lf,%lf\n", inputdata::grnds[i][0], inputdata::grnds[i][1]);
+				fprintf(fp,"%lf,%lf\n\n", rawsln->uavs_[uavk][0], rawsln->uavs_[uavk][1]);
+				activecovers[i]++;
+			}
+		}
 	}
-
-	strcpy(path,"./out/runtime_growth/");
-
-	strcat(path, target_folder);
-
-	sprintf(buff, "/%d_targets.csv", inputdata::nbr_grnds);
-//	sprintf(buff, "%d_targets.csv", inputdata::nbr_grnds);
-	strcat(path,buff);
-
-	fp=fopen(path,"a");
-
-if(fp==NULL)
-cout<<"FAILED !!! "<<path<<endl;
-
-	//fp=fopen("./out/runtime_growth/runtime.csv","a");
-	fprintf(fp, "%d, %f, %lu, %lu, %lu, %f, %f, %f, %f, %f\n",
-		inputdata::nbr_grnds, lb, n_clustering, n_scp, final_graph->uavs_.size(), sum
-		, time_spent_overall, time_spent_1st_phase, time_spent_lp_prblm, time_spent_CC);
-	fclose(fp);
 
 cout<<"THE END"<<endl;
 
