@@ -26,6 +26,11 @@ set xtics ("50" 0, "150" 2, "250" 4, "350" 6, "450" 8, "550" 10, "650" 12, "750"
 # called from ./srcs/scripts/
 # plot for [n=2:4]'../outs/results_runtimes.csv' u n w linespoints notitle
 
+plot 'set_large_gaps_for_cc_results_runtimes.csv' u 1 title 'tot runtime' with linespoints,\
+ 'set_large_gaps_for_cc_results_runtimes.csv' u 2 title '1st phase, clustering' with linespoints,\
+ 'set_large_gaps_for_cc_results_runtimes.csv' u 3 title 'MIP solver' with linespoints,\
+ 'set_large_gaps_for_cc_results_runtimes.csv' u 4 title 'linking one connected component' with linespoints
+
 plot '2_data_results_runtimes.csv' u 1 title 'tot runtime' with linespoints,\
  '2_data_results_runtimes.csv' u 2 title '1st phase, clustering' with linespoints,\
  '2_data_results_runtimes.csv' u 3 title 'MIP solver' with linespoints,\
