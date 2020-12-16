@@ -1,0 +1,6 @@
+for all 6 sets of data : set1 to set6
+
+calculating the strd deviation of cumulated strd deviation doesn't change much to be interpreted, due to
+the high volatility of strd devs in the increasing number of targets
+=> find a way to evolve the data with each change related to the number of targets and their distribution
+
