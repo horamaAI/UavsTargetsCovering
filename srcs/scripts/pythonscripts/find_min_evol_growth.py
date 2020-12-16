@@ -1,8 +1,10 @@
 
-# targets=["data"]
+# targets=["data", "set_large_gaps_for_cc"]
 
-targets=["set1_1000_1000_map", "set2_1500_1500_map", "set3_2000_2000_map", "set4_2500_2500_map", "set5_3000_3000_map",
-"set6_3500_3500_map"]
+# targets=["set1_1000_1000_map", "set2_1500_1500_map", "set3_2000_2000_map", "set4_2500_2500_map", "set5_3000_3000_map",
+# "set6_3500_3500_map"]
+
+targets=["set_large_gaps_for_cc"]
 
 data=[[] for i in range(len(targets))]
 
