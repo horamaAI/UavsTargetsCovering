@@ -24,8 +24,10 @@ for i in targets:
 avrgstds=[[] for i in targets]
 
 for i in range(len(alldata)):
+	print(i," starts :")
 	for j in range(len(alldata[i])):
 		avrgstds[i].append(np.std(alldata[i][j]))
+	print(np.percentile(avrgstds[i], [0, 25, 50, 75, 100]))
 
 #for row in avrgstds:
 #	print(len(row))
