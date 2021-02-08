@@ -1,13 +1,13 @@
-
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
-# targets=["set1_1000_1000_map", "set2_1500_1500_map", "set3_2000_2000_map", "set4_2500_2500_map", "set5_3000_3000_map",
-# "set6_3500_3500_map", "set_large_gaps_for_cc"]
-
-
 targets=["set1_1000_1000_map", "set2_1500_1500_map", "set3_2000_2000_map", "set4_2500_2500_map", "set5_3000_3000_map",
-"set6_3500_3500_map"]
+"set6_3500_3500_map", "set_large_gaps_for_cc"]
+
+
+# targets=["set1_1000_1000_map", "set2_1500_1500_map", "set3_2000_2000_map", "set4_2500_2500_map", "set5_3000_3000_map",
+# "set6_3500_3500_map"]
 
 alldata=[[[] for j in range(20)] for i in targets]
 
@@ -37,9 +37,24 @@ for i in range(len(alldata)):
 
 # bp=ax.boxplot(avrgstds)
 
+'''
 plt.boxplot(avrgstds)
 plt.xlabel('datasets')
 plt.ylabel('standard deviation')
-# plt.xticks([1, 2, 3, 4, 5, 6, 7], ['set 1', 'set 2', 'set 3', 'set 4', 'set 5', 'set 6', 'Large'])
-plt.xticks([1, 2, 3, 4, 5, 6], ['set 1', 'set 2', 'set 3', 'set 4', 'set 5', 'set 6'])
+plt.xticks([1, 2, 3, 4, 5, 6, 7], ['set 1', 'set 2', 'set 3', 'set 4', 'set 5', 'set 6', 'Large'])
+plt.yticks([1, 2, 3, 4, 5, 6, 7, 8], ['0', '500', '1,000', '1,500', '2,000', '2,500', '3,500', '4,000'])
+# plt.xticks([1, 2, 3, 4, 5, 6], ['set 1', 'set 2', 'set 3', 'set 4', 'set 5', 'set 6'])
 plt.show()
+'''
+labels = ['set 1', 'set 2', 'set 3', 'set 4', 'set 5', 'set 6', 'Large']
+x = np.arange(len(labels))
+fig, ax = plt.subplots()
+ax.boxplot(avrgstds)
+ax.set_xlabel('datasets')
+ax.set_ylabel('standard deviation')
+ax.set_xticks(x + 1)
+ax.set_xticklabels(labels)
+ax.get_yaxis().set_major_formatter(
+matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+plt.show()
+# print(avrgstds)
