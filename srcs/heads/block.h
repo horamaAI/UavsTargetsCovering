@@ -1,5 +1,5 @@
 #ifndef UAVSCOVS_HEADS_BLOCK_H_
-#define UAVSCOVS_HEADS_BLOCK_H_
+# define UAVSCOVS_HEADS_BLOCK_H_
 
 struct block{
 
