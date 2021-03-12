@@ -1,9 +1,8 @@
 // source : https://www.cs.colostate.edu/~fsieker/misc/debug/DEBUG.html
-
 // adapted from: http://stackoverflow.com/questions/5028302/small-logger-class
 
 #ifndef __DEBUG_H__
-#define __DEBUG_H__
+# define __DEBUG_H__
 
 #include <iostream>
 #include <string>

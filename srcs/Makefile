@@ -1,27 +1,22 @@
 
 # Compilator
-CPP = g++
-
+CPP		= g++
+NAME 	= uas_deplo
+# Build target executable
+TRGT	= $(NAME)
 # Options of compilation
 DBG=-g
-#CXXFLAGS = -Wall -Werror
 CXXFLAGS = -O0 -std=c++11 -Wall -Wextra -Wshadow -pedantic -Weffc++ -Werror -DDEBUG
-
 # Additionnal libraries inclusion
 LDLIBS = -lglpk -ligraph -lm
-
-## Build target executable
-#TARGET = main
-
 # Directories
 HEADS 	= ./heads
 #OBJS	= ./main.o ./block.o ./clustering.o ./glpk_linear_solver.o ./solution.o ./utils.o ./inputdata.o
-OBJS	= ./objs
-SOURCE	= main.cc block.cc clustering.cc glpk_linear_solver.cc solution.cc utils.cc inputdata.cc debug.cc
+OBJSDIR	= ./objs
+SRCS	= main.cc block.cc clustering.cc glpk_linear_solver.cc solution.cc utils.cc inputdata.cc debug.cc
 HEADER	= $(HEADS)/block.h $(HEADS)/clustering.h $(HEADS)/glpk_linear_solver.h $(HEADS)/solution.h\
 	$(HEADS)/utils.h $(HEADS)/inputdata.h $(HEADS)/debug.h
 OUT	= a.out
-
 
 all: $(OBJS)/main.o $(OBJS)/clustering.o $(OBJS)/glpk_linear_solver.o $(OBJS)/solution.o $(OBJS)/utils.o\
 	$(OBJS)/inputdata.o $(OBJS)/debug.o
