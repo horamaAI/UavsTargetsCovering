@@ -1,0 +1,44 @@
+# Compilator
+CPP		= g++
+# Exe name
+NAME 	= uas_deplo
+# Build target executable
+TRGT	= $(NAME)
+
+# Options of compilation
+DBG=-g
+CXXFLAGS = -O0 -std=c++11 -Wall -Wextra -Wshadow -pedantic -Weffc++ -Werror -DDEBUG
+
+# Additionnal libraries inclusion
+LDLIBS = -lglpk -ligraph -lm
+
+# Directories
+HEADS_DIR 		:= heads
+#OBJS	= ./main.o ./block.o ./clustering.o ./glpk_linear_solver.o ./solution.o ./utils.o ./inputdata.o
+OBJS_DIR	:= objs
+SRCS_DIR	:= srcs
+#HEADS		:= $(wildcard $(HEADS_DIR)/*.h)$(HEADS)/block.h $(HEADS)/clustering.h $(HEADS)/glpk_linear_solver.h $(HEADS)/solution.h\
+#	$(HEADS)/utils.h $(HEADS)/inputdata.h $(HEADS)/debug.h
+HEADS		:= $(wildcard $(HEADS_DIR)/*.h)
+#SRCS	= main.cc block.cc clustering.cc glpk_linear_solver.cc solution.cc utils.cc inputdata.cc debug.cc
+SRCS		:= $(wildcard $(SRCS_DIR)/*.cc)
+OBJS		:= $(SRCS:$(SRCS_DIR)/%.cc=$(OBJS_DIR)/%.o)
+#OUT	= a.out
+
+$(TRGT): $(OBJS)
+	$(CPP) $(DBG) $(LDLIBS) $(CXXFLAGS) -o $(TRGT) $^
+
+all: $(TRGT)
+
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cc
+	$(CPP) $(DBG) -o $@ -c $< $(CXXFLAGS)
+
+clean:
+	rm -f $(OBJS)
+
+fclean: clean
+	rm -f $(TRGT)
+
+re: fclean all
+
+.PHONY: all clean fclean re
